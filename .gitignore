@@ -1,2 +1,50 @@
-./build/
-./managed_components/
+./build/*
+./managed_components/# ESP-IDF specific
+build/
+sdkconfig
+sdkconfig.ci
+sdkconfig.ci.*
+sdkconfig.defaults
+dependencies.lock
+settings.txt
+
+# TinyUSB specific
+managed_components/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+
+# C/C++ artifacts
+*.o
+*.d
+*.elf
+*.map
+*.a
+*.so
+*.bin
+*.hex
+*.timestamp
+
+# Editor and IDE specific
+.vscode/
+*.code-workspace
+*.sublime*
+*.idea/
+*.vs/
+*.suo
+*.user
+*.userprefs
+*.unity
+*.swp
+*.swo
+
+# Operating System specific
+.DS_Store
+Thumbs.db
+
+# Other
+*.log
+*.tmp
+*.temp*
