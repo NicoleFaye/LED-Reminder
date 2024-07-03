@@ -1,5 +1,5 @@
 ./build/*
-./vscode/*
+./.vscode/*
 ./managed_components/# ESP-IDF specific
 build/
 sdkconfig
