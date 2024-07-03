@@ -49,3 +49,6 @@ Thumbs.db
 *.log
 *.tmp
 *.temp*
+*.old
+/.vscode
+.vscode/settings.json
