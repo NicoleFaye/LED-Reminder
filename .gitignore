@@ -7,7 +7,6 @@ sdkconfig.ci
 sdkconfig.ci.*
 sdkconfig.defaults
 dependencies.lock
-settings.txt
 
 # TinyUSB specific
 managed_components/
