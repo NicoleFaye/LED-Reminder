@@ -86,14 +86,9 @@ led5_brightness=100
 
 
 
-
-
-
-
-
-###############
-## TimeZones ##
-###############
+#####################
+## TimeZone Options##
+#####################
 # Africa/Abidjan
 # Africa/Accra
 # Africa/Addis_Ababa

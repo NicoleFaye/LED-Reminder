@@ -19,6 +19,7 @@
 #include "driver/gpio.h"
 #include "tinyusb.h"
 #include "tusb_msc_storage.h"
+#include "settings.h"
 #ifdef CONFIG_EXAMPLE_STORAGE_MEDIA_SDMMCCARD
 #include "diskio_impl.h"
 #include "diskio_sdmmc.h"
@@ -90,13 +91,13 @@ static int console_exit(int argc, char **argv);
 const esp_console_cmd_t cmds[] = {
     {
         .command = "read",
-        .help = "read BASE_PATH/README.MD and print its contents",
+        .help = "read BASE_PATH/settings.txt and print its contents",
         .hint = NULL,
         .func = &console_read,
     },
     {
         .command = "write",
-        .help = "create file BASE_PATH/README.MD if it does not exist",
+        .help = "create file BASE_PATH/settings.txt if it does not exist",
         .hint = NULL,
         .func = &console_write,
     },
@@ -165,7 +166,7 @@ static int console_unmount(int argc, char **argv)
     return 0;
 }
 
-// read BASE_PATH/README.MD and print its contents
+// read BASE_PATH/settings.txt and print its contents
 static int console_read(int argc, char **argv)
 {
     if (tinyusb_msc_storage_in_use_by_usb_host()) {
@@ -173,7 +174,7 @@ static int console_read(int argc, char **argv)
         return -1;
     }
     ESP_LOGD(TAG, "read from storage:");
-    const char *filename = BASE_PATH "/README.MD";
+    const char *filename = BASE_PATH "/settings.txt";
     FILE *ptr = fopen(filename, "r");
     if (ptr == NULL) {
         ESP_LOGE(TAG, "Filename not present - %s", filename);
@@ -187,7 +188,7 @@ static int console_read(int argc, char **argv)
     return 0;
 }
 
-// create file BASE_PATH/README.MD if it does not exist
+// create file BASE_PATH/settings.txt if it does not exist
 static int console_write(int argc, char **argv)
 {
     if (tinyusb_msc_storage_in_use_by_usb_host()) {
@@ -195,14 +196,12 @@ static int console_write(int argc, char **argv)
         return -1;
     }
     ESP_LOGD(TAG, "write to storage:");
-    const char *filename = BASE_PATH "/README.MD";
+    const char *filename = BASE_PATH "/settings.txt";
     FILE *fd = fopen(filename, "r");
     if (!fd) {
-        ESP_LOGW(TAG, "README.MD doesn't exist yet, creating");
+        ESP_LOGW(TAG, "settings.txt doesn't exist yet, creating");
         fd = fopen(filename, "w");
-        fprintf(fd, "Mass Storage Devices are one of the most common USB devices. It use Mass Storage Class (MSC) that allow access to their internal data storage.\n");
-        fprintf(fd, "In this example, ESP chip will be recognised by host (PC) as Mass Storage Device.\n");
-        fprintf(fd, "Upon connection to USB host (PC), the example application will initialize the storage module and then the storage will be seen as removable device on PC.\n");
+        fprintf(fd, settings_txt);
         fclose(fd);
     }
     return 0;
