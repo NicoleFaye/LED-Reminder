@@ -8,4 +8,5 @@ idf_component_register(
     SRCS "tusb_msc_main.c"
     INCLUDE_DIRS .
     PRIV_REQUIRES "${priv_requires}"
+    REQUIRES esp_wifi nvs_flash
 )
