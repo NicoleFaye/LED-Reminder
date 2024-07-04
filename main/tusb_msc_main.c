@@ -7,6 +7,7 @@
 #include "tinyusb.h"
 #include "tusb_msc_storage.h"
 #include "settings.h"
+#include "parse.h"
 
 #include <string.h>
 #include "freertos/FreeRTOS.h"
@@ -60,9 +61,10 @@
 #endif
 
 
-static const char *TAG = "example_main";
 static bool msc_exposed = true;
 static bool repl_enabled = false;
+
+#define WIFI_CONNECTED_BLINK_DELAY_MS 500
 
 /* wifi and time setup
 ************************************************************/
@@ -168,7 +170,14 @@ void wifi_init_sta(void)
         ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
                  EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
         gpio_set_level(6, 1);
-        //here
+        //esp task delay here
+        vTaskDelay(WIFI_CONNECTED_BLINK_DELAY_MS/ portTICK_PERIOD_MS);
+        gpio_set_level(6, 0);
+        vTaskDelay(WIFI_CONNECTED_BLINK_DELAY_MS/ portTICK_PERIOD_MS);
+        gpio_set_level(6, 1);
+        vTaskDelay(WIFI_CONNECTED_BLINK_DELAY_MS/ portTICK_PERIOD_MS);
+        gpio_set_level(6, 0);
+
     }
     else if (bits & WIFI_FAIL_BIT)
     {
@@ -327,7 +336,7 @@ static void _mount(void)
     ESP_ERROR_CHECK(tinyusb_msc_storage_mount(BASE_PATH));
 
     // List all the files in this directory
-    ESP_LOGI(TAG, "\nls command output:");
+    ESP_LOGI(TAG, "ls command output:");
     struct dirent *d;
     DIR *dh = opendir(BASE_PATH);
     if (!dh)
@@ -347,8 +356,9 @@ static void _mount(void)
     // While the next entry is not readable we will print directory files
     while ((d = readdir(dh)) != NULL)
     {
-        printf("%s\n", d->d_name);
+        ESP_LOGI(TAG, "%s", d->d_name);
     }
+    ESP_LOGI(TAG,"------------");
     return;
 }
 
@@ -468,7 +478,7 @@ void app_main(void)
     gpio_reset_pin(6);
     gpio_set_direction(6, GPIO_MODE_OUTPUT);
 
-
+    //ESP_LOGI(TAG, "%s", get_timezone("Africa/Djibouti"));
 
     // Initialize NVS
     esp_err_t ret = nvs_flash_init();
@@ -504,6 +514,7 @@ void app_main(void)
 
     // create the settings.txt file if it does not exist
     console_write(0, NULL);
+    ESP_LOGI(TAG,"Config check return value: %i",check_configuration(BASE_PATH "/settings.txt"));
 
     // Initialize USB MSC
     if (msc_exposed)
