@@ -24,24 +24,32 @@ static bool repl_enabled = false;
 
 void app_main(void)
 {
-    //initialize LED on pin 6
-    gpio_reset_pin(6);
-    gpio_set_direction(6, GPIO_MODE_OUTPUT);
+    // Initialize LED
+    ESP_LOGI(TAG, "Initializing LED...");
+    initialize_led();
+
 
     //ESP_LOGI(TAG, "%s", get_timezone("Africa/Djibouti"));
-
 
     // Initialize NVS
     ESP_LOGI(TAG, "Initializing NVS...");
     initialize_nvs();
 
+    // Initialize WiFi
+    ESP_LOGI(TAG, "Initializing WiFi...");
+    wifi_init();
+
     // Initialize SNTP
     ESP_LOGI(TAG, "Initializing SNTP...");
     initialize_sntp("PST8PDT,M3.2.0,M11.1.0");
 
-
+    // Initialize storage
     ESP_LOGI(TAG, "Initializing storage...");
     initialize_msc();
+
+    // Create settings file if it does not exist
+    ESP_LOGI(TAG, "Creating settings file...");
+    create_settings_file();
 
     ESP_LOGI(TAG,"Config check return value: %i",check_configuration(BASE_PATH "/settings.txt"));
 

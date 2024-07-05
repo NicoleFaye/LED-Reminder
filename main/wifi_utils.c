@@ -134,6 +134,7 @@ void wifi_init(void)
     {
         ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
                  EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
+        blinkSet(WIFI_CONNECTED_BLINK_DELAY_MS, 3, (int[]){6,7,8,9,10,11}, 6);
     }
     else if (bits & WIFI_FAIL_BIT)
     {

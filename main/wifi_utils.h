@@ -15,6 +15,7 @@
 #include <sys/time.h>
 #include "esp_sntp.h"
 #include "settings.h"
+#include "blink.h"
 
 /* WiFi configuration that can be set via project configuration menu or
    by changing the below entries to strings with the desired config */
