@@ -39,7 +39,7 @@ void button_task(void *pvParameter) {
                 // Button press detected, record timestamp
                 button_press_timestamp[pin - BUTTON1] = current_time;
                 long_press_detected[pin - BUTTON1] = false; // Reset long press flag
-            } else if (button_state == 0 && !long_press_detected[pin - BUTTON1] && (current_time - button_press_timestamp[pin - BUTTON1] >= 3000)) {
+            } else if (button_state == 0 && !long_press_detected[pin - BUTTON1] && (current_time - button_press_timestamp[pin - BUTTON1] >= BUTTON_LONG_PRESS_DELAY_MS)) {
                 // Button held for 3 seconds, call long press callback and set flag to avoid short press callback
                 button_long_press_callbacks[pin - BUTTON1]();
                 long_press_detected[pin - BUTTON1] = true;
