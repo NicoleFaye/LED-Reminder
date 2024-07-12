@@ -45,7 +45,7 @@ void storage_mount_changed_cb(tinyusb_msc_event_t *event);
 esp_err_t storage_init_spiflash(wl_handle_t *wl_handle);
 int create_settings_file(void);
 
-void read_settings_file(void);
+void print_settings_file(void);
 
 extern tusb_desc_device_t descriptor_config;
 extern char const *string_desc_arr[];

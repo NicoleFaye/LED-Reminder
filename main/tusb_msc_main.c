@@ -63,7 +63,7 @@ void app_main(void)
     {
         ESP_LOGI(TAG, "Exposing MSC...");
         expose_msc();
-        read_settings_file();
+        print_settings_file();
     }
 
     // Initialize REPL

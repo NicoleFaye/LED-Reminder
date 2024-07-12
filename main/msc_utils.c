@@ -150,7 +150,7 @@ int create_settings_file(void)
 }
 
 
-void read_settings_file(void) {
+void print_settings_file(void) {
     const char *filename = BASE_PATH "/settings.txt";
     FILE *file = fopen(filename, "r"); // Open the file for reading
     if (file == NULL) {
