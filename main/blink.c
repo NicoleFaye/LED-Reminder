@@ -2,7 +2,7 @@
 
 void initialize_led(void)
 {
-    for(int i = 6; i < 12; i++){
+    for(int i = LED1; i < LED5 + 1; i++){
         gpio_reset_pin(i);
         gpio_set_direction(i, GPIO_MODE_OUTPUT);
     }

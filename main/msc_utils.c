@@ -148,3 +148,28 @@ int create_settings_file(void)
     }
     return 0;
 }
+
+
+void read_settings_file(void) {
+    const char *filename = BASE_PATH "/settings.txt";
+    FILE *file = fopen(filename, "r"); // Open the file for reading
+    if (file == NULL) {
+        ESP_LOGE(TAG, "Failed to open %s for reading", filename);
+        return;
+    }
+
+    // Assuming you want to read the whole file into a single string
+    fseek(file, 0, SEEK_END); // Go to the end of the file
+    long fsize = ftell(file); // Get the size of the file
+    fseek(file, 0, SEEK_SET); // Go back to the beginning of the file
+
+    char *string = malloc(fsize + 1); // Allocate memory for the file content plus null terminator
+    fread(string, 1, fsize, file); // Read the entire file into memory
+    string[fsize] = '\0'; // Null-terminate the string
+
+    // Now you can use `string` as needed
+    ESP_LOGI(TAG, "File content:\n%s", string);
+
+    free(string); // Don't forget to free the allocated memory
+    fclose(file); // Close the file
+}

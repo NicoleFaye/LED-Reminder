@@ -10,6 +10,12 @@
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 
+#define LED1 1
+#define LED2 2
+#define LED3 3
+#define LED4 4
+#define LED5 5
+
 #define WIFI_CONNECTED_BLINK_DELAY_MS 500
 
 void initialize_led(void);

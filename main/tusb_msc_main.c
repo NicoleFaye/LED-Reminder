@@ -16,6 +16,7 @@
 #include "msc_utils.h"
 #include "repl.h"
 #include "blink.h"
+#include "buttons.h"
 
 static bool msc_exposed = true;
 static bool repl_enabled = false;
@@ -27,6 +28,10 @@ void app_main(void)
     // Initialize LED
     ESP_LOGI(TAG, "Initializing LED...");
     initialize_led();
+
+    // Initialize buttons
+    ESP_LOGI(TAG, "Initializing buttons...");
+    initialize_buttons();
 
 
     //ESP_LOGI(TAG, "%s", get_timezone("Africa/Djibouti"));
@@ -58,6 +63,7 @@ void app_main(void)
     {
         ESP_LOGI(TAG, "Exposing MSC...");
         expose_msc();
+        read_settings_file();
     }
 
     // Initialize REPL
