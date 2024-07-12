@@ -21,8 +21,6 @@
 static bool msc_exposed = true;
 static bool repl_enabled = false;
 
-
-
 void app_main(void)
 {
     // Initialize LED
@@ -33,8 +31,7 @@ void app_main(void)
     ESP_LOGI(TAG, "Initializing buttons...");
     initialize_buttons();
 
-
-    //ESP_LOGI(TAG, "%s", get_timezone("Africa/Djibouti"));
+    // ESP_LOGI(TAG, "%s", get_timezone("Africa/Djibouti"));
 
     // Initialize NVS
     ESP_LOGI(TAG, "Initializing NVS...");
@@ -56,7 +53,7 @@ void app_main(void)
     ESP_LOGI(TAG, "Creating settings file...");
     create_settings_file();
 
-    ESP_LOGI(TAG,"Config check return value: %i",check_configuration(BASE_PATH "/settings.txt"));
+    ESP_LOGI(TAG, "Config check return value: %i", check_configuration(BASE_PATH "/settings.txt"));
 
     // Initialize USB MSC
     if (msc_exposed)
@@ -70,5 +67,22 @@ void app_main(void)
     {
         ESP_LOGI(TAG, "Initializing REPL...");
         initialize_repl();
+    }
+
+    int kv_count;
+    KeyValuePair *config = parse_configuration(BASE_PATH "/settings.txt", &kv_count);
+    if (config)
+    {
+        // Use the config array
+        for (int i = 0; i < kv_count; i++)
+        {
+            ESP_LOGI(TAG,"%s = %s", config[i].key, config[i].value);
+        }
+        // Don't forget to free the memory when done
+        free(config);
+    }
+    else
+    {
+        // Handle error
     }
 }

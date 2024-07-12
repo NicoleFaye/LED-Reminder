@@ -96,6 +96,9 @@ void initialize_buttons(void) {
         gpio_set_pull_mode(i, GPIO_PULLUP_ONLY);
     }
 
+    // TODO handle custom strapping on startup
+
+
     // Create a task to monitor button presses
     xTaskCreate(&button_task, "button_task", 2048, NULL, 10, NULL);
 }
