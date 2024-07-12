@@ -5,7 +5,7 @@ if(CONFIG_EXAMPLE_STORAGE_MEDIA_SPIFLASH)
 endif()
 
 idf_component_register(
-    SRCS "tusb_msc_main.c" "parse.c" "settings.c" "wifi_utils.c" "time_utils.c" "msc_utils.c" "repl.c" "blink.c" "buttons.c"
+    SRCS "config_handler.c" "tusb_msc_main.c" "parse.c" "settings.c" "wifi_utils.c" "time_utils.c" "msc_utils.c" "repl.c" "blink.c" "buttons.c" "config_handler.c"
     INCLUDE_DIRS .
     PRIV_REQUIRES "${priv_requires}"
     REQUIRES esp_wifi nvs_flash 

@@ -17,6 +17,7 @@
 #include "repl.h"
 #include "blink.h"
 #include "buttons.h"
+#include "config_handler.h"
 
 static bool msc_exposed = true;
 static bool repl_enabled = false;
@@ -69,20 +70,7 @@ void app_main(void)
         initialize_repl();
     }
 
-    int kv_count;
-    KeyValuePair *config = parse_configuration(BASE_PATH "/settings.txt", &kv_count);
-    if (config)
-    {
-        // Use the config array
-        for (int i = 0; i < kv_count; i++)
-        {
-            ESP_LOGI(TAG,"%s = %s", config[i].key, config[i].value);
-        }
-        // Don't forget to free the memory when done
-        free(config);
-    }
-    else
-    {
-        // Handle error
-    }
+    // Apply configuration
+    ESP_LOGI(TAG, "Applying configuration...");
+    apply_configuration();
 }

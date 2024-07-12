@@ -22,4 +22,15 @@ void initialize_led(void);
 void blink(int delay_ms, int num_blinks, int pin);
 void blinkSet(int delay_ms, int num_blinks, int pins[], int num_pins);
 
+typedef struct {
+    char function_mode[20];
+    int offset_seconds;
+    int set_time_days;
+    int fixed_interval_seconds;
+    char display_mode[10];
+    int blink_rate;
+    int fade_rate;
+    int brightness;
+} LEDSettings;
+
 #endif
