@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "settings.h"
 #include "esp_log.h"
-#include "blink.h"
+#include "led_utils.h"
 #include "msc_utils.h"
 
 #define MAX_SETTINGS 50

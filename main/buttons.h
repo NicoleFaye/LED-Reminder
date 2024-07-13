@@ -10,7 +10,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
-#include <blink.h>
+#include "led_utils.h"
 
 #define BUTTON1 6
 #define BUTTON2 7

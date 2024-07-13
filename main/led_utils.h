@@ -1,5 +1,5 @@
-#ifndef BLINK_H
-#define BLINK_H
+#ifndef LED_UTILS_H
+#define LED_UTILS_H
 
 #include "settings.h"
 #include "driver/gpio.h"

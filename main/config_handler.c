@@ -29,7 +29,7 @@ static void apply_led_config(const KeyValuePair* config, int count) {
             snprintf(led_prefix, sizeof(led_prefix), "led%d_", led);
 
             if (strncmp(config[i].key, led_prefix, strlen(led_prefix)) == 0) {
-                char* setting = config[i].key + strlen(led_prefix);
+                const char* setting = config[i].key + strlen(led_prefix);
                 
                 if (strcmp(setting, "function_mode") == 0) {
                     strncpy(led_settings[led-1].function_mode, config[i].value, sizeof(led_settings[led-1].function_mode) - 1);
