@@ -23,9 +23,6 @@ static bool repl_enabled = false;
 
 void app_main(void)
 {
-    // Initialize LED
-    ESP_LOGI(TAG, "Initializing LED...");
-    initialize_led();
 
     // Initialize buttons
     ESP_LOGI(TAG, "Initializing buttons...");
@@ -37,13 +34,6 @@ void app_main(void)
     ESP_LOGI(TAG, "Initializing NVS...");
     initialize_nvs();
 
-    // Initialize WiFi
-    ESP_LOGI(TAG, "Initializing WiFi...");
-    wifi_init();
-
-    // Initialize SNTP
-    ESP_LOGI(TAG, "Initializing SNTP...");
-    initialize_sntp("PST8PDT,M3.2.0,M11.1.0");
 
     // Initialize storage
     ESP_LOGI(TAG, "Initializing storage...");
@@ -72,4 +62,16 @@ void app_main(void)
     // Apply configuration
     ESP_LOGI(TAG, "Applying configuration...");
     apply_configuration();
+
+    // Initialize LED
+    ESP_LOGI(TAG, "Initializing LED...");
+    initialize_led();
+
+    // Initialize WiFi
+    ESP_LOGI(TAG, "Initializing WiFi...");
+    wifi_init();
+
+    // Initialize SNTP
+    ESP_LOGI(TAG, "Initializing SNTP...");
+    initialize_sntp("PST8PDT,M3.2.0,M11.1.0");
 }

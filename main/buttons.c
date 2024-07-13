@@ -62,31 +62,31 @@ void button_task(void *pvParameter) {
 void button1_long_press_callback(void) {
     ESP_LOGI("BUTTON", "Button 1 long pressed");
     // Additional logic for long press...
-    gpio_set_level(LED1, 1);
+    set_led_state(LED1, 1);
 }
 
 void button2_long_press_callback(void) {
     ESP_LOGI("BUTTON", "Button 2 long pressed");
     // Additional logic for long press...
-    gpio_set_level(LED2, 1);
+    set_led_state(LED2, 1);
 }
 
 void button3_long_press_callback(void) {
     ESP_LOGI("BUTTON", "Button 3 long pressed");
     // Additional logic for long press...
-    gpio_set_level(LED3, 1);
+    set_led_state(LED3, 1);
 }
 
 void button4_long_press_callback(void) {
     ESP_LOGI("BUTTON", "Button 4 long pressed");
     // Additional logic for long press...
-    gpio_set_level(LED4, 1);
+    set_led_state(LED4, 1);
 }
 
 void button5_long_press_callback(void) {
     ESP_LOGI("BUTTON", "Button 5 long pressed");
     // Additional logic for long press...
-    gpio_set_level(LED5, 1);
+    set_led_state(LED5, 1);
 }
 
 void initialize_buttons(void) {
@@ -109,29 +109,29 @@ void button1_callback(void) {
     //blink(50, 2, LED1);
 
     // turn off led
-    gpio_set_level(LED1, 0);
+    set_led_state(LED1, 0);
 }
 
 void button2_callback(void) {
     ESP_LOGI("BUTTON", "Button 2 pressed");
     //blink(50, 2, LED2);
-    gpio_set_level(LED2, 0);
+    set_led_state(LED2, 0);
 }
 
 void button3_callback(void) {
     ESP_LOGI("BUTTON", "Button 3 pressed");
     //blink(50, 2, LED3);
-    gpio_set_level(LED3, 0);
+    set_led_state(LED3, 0);
 }
 
 void button4_callback(void) {
     ESP_LOGI("BUTTON", "Button 4 pressed");
     //blink(50, 2, LED4);
-    gpio_set_level(LED4, 0);
+    set_led_state(LED4, 0);
 }
 
 void button5_callback(void) { 
     ESP_LOGI("BUTTON", "Button 5 pressed");
     //blink(50, 2, LED5);
-    gpio_set_level(LED5, 0);
+    set_led_state(LED5, 0);
 }

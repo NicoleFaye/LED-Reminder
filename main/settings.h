@@ -2,7 +2,6 @@
 #define SETTINGS_H
 
 #define MAX_LINE_LENGTH 256
-#define NUM_LEDS 4
 
 typedef struct {
     char key[MAX_LINE_LENGTH];
