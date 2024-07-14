@@ -23,7 +23,7 @@ def generate_header_and_source_with_raw_text_and_comments(text_file_path, csv_fi
     # Write to the output header file
     with open(header_output_path, 'w') as header_file:
         header_file.write('#ifndef SETTINGS_H\n#define SETTINGS_H\n\n')
-        header_file.write('#define MAX_LINE_LENGTH 256\n#define NUM_LEDS 4\n\n')
+        header_file.write('#define MAX_LINE_LENGTH 256\n\n')
         header_file.write('typedef struct {\n')
         header_file.write('    char key[MAX_LINE_LENGTH];\n')
         header_file.write('    char value[MAX_LINE_LENGTH];\n')

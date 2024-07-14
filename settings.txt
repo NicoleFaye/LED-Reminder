@@ -18,13 +18,13 @@ password=your_network_password
 led1_function_mode=manual
 
 # Used only if function mode is 'offset'
-led1_offset_seconds=0
+led1_offset_seconds=60
 
 # Used only if function mode is 'set_time'
-led1_set_time_days=0
+led1_set_time_days=1
 
 # Used only if function mode is 'fixed_interval'
-led1_fixed_interval_seconds=0
+led1_fixed_interval_seconds=360
 
 # Display mode options:
 # - solid: LED is solid on
@@ -33,10 +33,10 @@ led1_fixed_interval_seconds=0
 led1_display_mode=solid
 
 # Used only if display mode is 'blink' (in milliseconds)
-led1_blink_rate=0
+led1_blink_rate=500
 
 # Used only if display mode is 'fade' (in milliseconds)
-led1_fade_rate=0
+led1_fade_rate=500
 
 # Brightness setting (0-100%)
 led1_brightness=100
@@ -45,42 +45,42 @@ led1_brightness=100
 
 # LED/Button Pair 2 Settings
 led2_function_mode=manual
-led2_offset_seconds=0
+led2_offset_seconds=60
 led2_set_time_days=0
-led2_fixed_interval_seconds=0
+led2_fixed_interval_seconds=360
 led2_display_mode=solid
-led2_blink_rate=0
-led2_fade_rate=0
+led2_blink_rate=500
+led2_fade_rate=500
 led2_brightness=100
 
 # LED/Button Pair 3 Settings
 led3_function_mode=manual
-led3_offset_seconds=0
+led3_offset_seconds=60
 led3_set_time_days=0
-led3_fixed_interval_seconds=0
+led3_fixed_interval_seconds=360
 led3_display_mode=solid
-led3_blink_rate=0
-led3_fade_rate=0
+led3_blink_rate=500
+led3_fade_rate=500
 led3_brightness=100
 
 # LED/Button Pair 4 Settings
 led4_function_mode=manual
-led4_offset_seconds=0
-led4_set_time_days=0
-led4_fixed_interval_seconds=0
+led4_offset_seconds=60
+led4_set_time_days=1
+led4_fixed_interval_seconds=360
 led4_display_mode=solid
-led4_blink_rate=0
-led4_fade_rate=0
+led4_blink_rate=500
+led4_fade_rate=500
 led4_brightness=100
 
 # LED/Button Pair 5 Settings
 led5_function_mode=manual
-led5_offset_seconds=0
-led5_set_time_days=0
-led5_fixed_interval_seconds=0
+led5_offset_seconds=60
+led5_set_time_days=1
+led5_fixed_interval_seconds=360
 led5_display_mode=solid
-led5_blink_rate=0
-led5_fade_rate=0
+led5_blink_rate=500
+led5_fade_rate=500
 led5_brightness=100
 
 
