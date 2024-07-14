@@ -51,6 +51,8 @@ void led_task(void *pvParameters)
 
         for (int i = 0; i < NUM_LEDS; i++)
         {
+            bool should_be_on = led_settings[i].active;
+            /*
             bool should_be_on = false;
 
             // Check function mode
@@ -77,6 +79,7 @@ void led_task(void *pvParameters)
             {
                 should_be_on = ((now / pdMS_TO_TICKS(1000)) % led_settings[i].fixed_interval_seconds) < (led_settings[i].fixed_interval_seconds / 2);
             }
+            */
 
             // Apply display mode
             if (strcmp(led_settings[i].display_mode, "solid") == 0)
