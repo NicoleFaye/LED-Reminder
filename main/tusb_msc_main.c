@@ -58,14 +58,14 @@ void app_main(void)
         ESP_LOGI(TAG, "Initializing REPL...");
         initialize_repl();
     }
+    // Initialize LED
+    ESP_LOGI(TAG, "Initializing LED...");
+    initialize_led();
 
     // Apply configuration
     ESP_LOGI(TAG, "Applying configuration...");
     apply_configuration();
 
-    // Initialize LED
-    ESP_LOGI(TAG, "Initializing LED...");
-    initialize_led();
 
     // Initialize WiFi
     ESP_LOGI(TAG, "Initializing WiFi...");
