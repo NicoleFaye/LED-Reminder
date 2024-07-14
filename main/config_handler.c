@@ -29,7 +29,7 @@ static void apply_led_config(const KeyValuePair *config, int count)
 {
     for (int i = 0; i < count; i++)
     {
-        for (int led = 1; led <= NUM_LEDS; led++)
+        for (int led = 0; led < NUM_LEDS; led++)
         {
             char led_prefix[10];
             snprintf(led_prefix, sizeof(led_prefix), "led%d_", led);
@@ -39,49 +39,48 @@ static void apply_led_config(const KeyValuePair *config, int count)
 
                 if (strcmp(setting, "function_mode") == 0)
                 {
-                    strncpy(led_settings[led - 1].function_mode, config[i].value, sizeof(led_settings[led - 1].function_mode) - 1);
+                    strncpy(led_settings[led ].function_mode, config[i].value, sizeof(led_settings[led ].function_mode) );
+                    ESP_LOGI(TAG, "Setting LED %d function mode to %s", led, led_settings[led ].function_mode);
                 }
                 else if (strcmp(setting, "offset_seconds") == 0)
                 {
-                    led_settings[led - 1].offset_seconds = atoi(config[i].value);
+                    led_settings[led ].offset_seconds = atoi(config[i].value);
+                    ESP_LOGI(TAG, "Setting LED %d offset seconds to %d", led, led_settings[led ].offset_seconds);
                 }
                 else if (strcmp(setting, "set_time_days") == 0)
                 {
-                    led_settings[led - 1].set_time_days = atoi(config[i].value);
+                    led_settings[led ].set_time_days = atoi(config[i].value);
+                    ESP_LOGI(TAG, "Setting LED %d set time days to %d", led, led_settings[led ].set_time_days);
                 }
                 else if (strcmp(setting, "fixed_interval_seconds") == 0)
                 {
-                    led_settings[led - 1].fixed_interval_seconds = atoi(config[i].value);
+                    led_settings[led ].fixed_interval_seconds = atoi(config[i].value);
+                    ESP_LOGI(TAG, "Setting LED %d fixed interval to %d", led, led_settings[led ].fixed_interval_seconds);
                 }
                 else if (strcmp(setting, "display_mode") == 0)
                 {
-                    strncpy(led_settings[led - 1].display_mode, config[i].value, sizeof(led_settings[led - 1].display_mode) - 1);
+                    strncpy(led_settings[led ].display_mode, config[i].value, sizeof(led_settings[led ].display_mode) );
+                    ESP_LOGI(TAG, "Setting LED %d display mode to %s", led, led_settings[led ].display_mode);
                 }
                 else if (strcmp(setting, "blink_rate") == 0)
                 {
-                    led_settings[led - 1].blink_rate = atoi(config[i].value);
+                    led_settings[led ].blink_rate = atoi(config[i].value);
+                    ESP_LOGI(TAG, "Setting LED %d blink rate to %d", led, led_settings[led ].blink_rate);
                 }
                 else if (strcmp(setting, "fade_rate") == 0)
                 {
-                    led_settings[led - 1].fade_rate = atoi(config[i].value);
+                    led_settings[led ].fade_rate = atoi(config[i].value);
+                    ESP_LOGI(TAG, "Setting LED %d fade rate to %d", led, led_settings[led ].fade_rate);
                 }
                 else if (strcmp(setting, "brightness") == 0)
                 {
                     int brightness = atoi(config[i].value);
-                    led_settings[led - 1].brightness = brightness;
-                    set_led_brightness(led - 1, brightness);
+                    led_settings[led ].brightness = brightness;
+                    set_led_brightness(led , brightness);
                     ESP_LOGI(TAG, "Setting LED %d brightness to %d", led, brightness);
                 }
             }
         }
-    }
-    // Print LED settings
-    for (int led = 0; led < 5; led++)
-    {
-        ESP_LOGI(TAG, "Configuring LED %d", led + 1);
-        ESP_LOGI(TAG, "  Function mode: %s", led_settings[led].function_mode);
-        ESP_LOGI(TAG, "  Display mode: %s", led_settings[led].display_mode);
-        ESP_LOGI(TAG, "  Brightness: %d", led_settings[led].brightness);
     }
 }
 

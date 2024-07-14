@@ -60,7 +60,7 @@ void set_led_brightness(int led_index, int brightness)
         int duty = (brightness * ((1 << PWM_RESOLUTION) - 1)) / 100; // Convert percentage to duty cycle
         ledc_set_duty(LEDC_LOW_SPEED_MODE, led_settings[led_index].pwm_channel, duty);
         ledc_update_duty(LEDC_LOW_SPEED_MODE, led_settings[led_index].pwm_channel);
-        ESP_LOGI(TAG, "LED %d brightness set to %d, duty: %d", led_index, brightness, duty);
+        //ESP_LOGI(TAG, "LED %d brightness set to %d, duty: %d", led_index, brightness, duty);
     }
 }
 
