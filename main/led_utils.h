@@ -9,6 +9,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
+#include <time.h>
+#include <string.h>
 
 #define LED1 1
 #define LED2 2
@@ -37,15 +39,17 @@ typedef struct {
     int fade_rate;
     int brightness;
     BlinkSequence blink_sequence;
+    bool active;
+    int pin;  // Add this to store the GPIO pin number
 } LEDSettings;
 
 // Global array of LED settings
 extern LEDSettings led_settings[NUM_LEDS];
 
 void initialize_led(void);
-void set_led_state(int led_pin, bool state);
+void set_led_state(int led_index, bool state);
 void led_task(void *pvParameters);
-void blink(int delay_ms, int num_blinks, int pin);
-void blinkSet(int delay_ms, int num_blinks, int pins[], int num_pins);
+void blink(int delay_ms, int num_blinks, int led_index);
+void blinkSet(int delay_ms, int num_blinks, int led_indices[], int num_leds);
 
 #endif
