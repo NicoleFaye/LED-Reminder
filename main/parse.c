@@ -285,6 +285,8 @@ void parse_and_handle_settings(void) {
                         led_settings[led-1].offset_seconds = atoi(config[i].value);
                     } else if (strcmp(setting, "set_time_days") == 0) {
                         led_settings[led-1].set_time_days = atoi(config[i].value);
+                    } else if (strcmp(setting, "set_time") == 0) {
+                        sscanf(config[i].value, "%d:%d", &led_settings[led-1].set_time_hours, &led_settings[led-1].set_time_minutes);
                     } else if (strcmp(setting, "fixed_interval_seconds") == 0) {
                         led_settings[led-1].fixed_interval_seconds = atoi(config[i].value);
                     } else if (strcmp(setting, "display_mode") == 0) {

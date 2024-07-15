@@ -37,6 +37,8 @@ typedef struct {
     char function_mode[20];
     int offset_seconds;
     int set_time_days;
+    int set_time_hours;
+    int set_time_minutes;
     int fixed_interval_seconds;
     char display_mode[10];
     int blink_rate;
