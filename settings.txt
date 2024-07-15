@@ -22,6 +22,7 @@ led1_offset_seconds=60
 
 # Used only if function mode is 'set_time'
 led1_set_time_days=1
+led1_set_time=12:00
 
 # Used only if function mode is 'fixed_interval'
 led1_fixed_interval_seconds=360
@@ -46,7 +47,8 @@ led1_brightness=100
 # LED/Button Pair 2 Settings
 led2_function_mode=manual
 led2_offset_seconds=60
-led2_set_time_days=0
+led2_set_time_days=1
+led2_set_time=12:00
 led2_fixed_interval_seconds=360
 led2_display_mode=solid
 led2_blink_rate=500
@@ -56,7 +58,8 @@ led2_brightness=100
 # LED/Button Pair 3 Settings
 led3_function_mode=manual
 led3_offset_seconds=60
-led3_set_time_days=0
+led3_set_time_days=1
+led3_set_time=12:00
 led3_fixed_interval_seconds=360
 led3_display_mode=solid
 led3_blink_rate=500
@@ -67,6 +70,7 @@ led3_brightness=100
 led4_function_mode=manual
 led4_offset_seconds=60
 led4_set_time_days=1
+led4_set_time=12:00
 led4_fixed_interval_seconds=360
 led4_display_mode=solid
 led4_blink_rate=500
@@ -77,6 +81,7 @@ led4_brightness=100
 led5_function_mode=manual
 led5_offset_seconds=60
 led5_set_time_days=1
+led5_set_time=12:00
 led5_fixed_interval_seconds=360
 led5_display_mode=solid
 led5_blink_rate=500
