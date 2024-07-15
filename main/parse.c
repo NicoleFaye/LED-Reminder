@@ -74,6 +74,16 @@ int validate_led_setting(KeyValuePair kv, int led_num)
             return 0; // Invalid brightness
         }
     }
+    else if (strstr(kv.key, "set_time") != NULL)
+    {
+        // Validate the time format (HH:MM)
+        int hours, minutes;
+        if (sscanf(kv.value, "%d:%d", &hours, &minutes) != 2 ||
+            hours < 0 || hours > 23 || minutes < 0 || minutes > 59)
+        {
+            return 0; // Invalid time format
+        }
+    }
     else
     {
         // Other LED settings can be validated as needed
