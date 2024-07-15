@@ -9,38 +9,37 @@ void initialize_ledc(void)
         .duty_resolution = PWM_RESOLUTION,
         .freq_hz = PWM_FREQUENCY,
         .speed_mode = LEDC_LOW_SPEED_MODE,
-        .timer_num = LEDC_TIMER_0
-    };
+        .timer_num = LEDC_TIMER_0};
     ledc_timer_config(&ledc_timer);
 
     // Configure LEDC channels for each LED
-    for (int i = 0; i < NUM_LEDS; i++) {
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
         ledc_channel_config_t ledc_channel = {
             .channel = led_settings[i].pwm_channel,
             .duty = 0,
             .gpio_num = led_settings[i].pin,
             .speed_mode = LEDC_LOW_SPEED_MODE,
-            .timer_sel = LEDC_TIMER_0
-        };
+            .timer_sel = LEDC_TIMER_0};
         ledc_channel_config(&ledc_channel);
     }
 }
 
-
 void initialize_led(void)
 {
     int led_pins[NUM_LEDS] = {LED1, LED2, LED3, LED4, LED5};
-    
-    for (int i = 0; i < NUM_LEDS; i++) {
+
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
         gpio_reset_pin(led_pins[i]);
         gpio_set_direction(led_pins[i], GPIO_MODE_OUTPUT);
-        
+
         led_settings[i].pin = led_pins[i];
         led_settings[i].active = false;
         strcpy(led_settings[i].function_mode, "manual");
         strcpy(led_settings[i].display_mode, "solid");
         led_settings[i].brightness = 100; // Default to full brightness
-        led_settings[i].pwm_channel = i; // Assign a unique PWM channel to each LED
+        led_settings[i].pwm_channel = i;  // Assign a unique PWM channel to each LED
     }
 
     // Initialize LEDC
@@ -52,27 +51,33 @@ void initialize_led(void)
 
 void set_led_brightness(int led_index, int brightness)
 {
-    if (led_index >= 0 && led_index < NUM_LEDS) {
-        if (brightness <= 0) {
+    if (led_index >= 0 && led_index < NUM_LEDS)
+    {
+        if (brightness <= 0)
+        {
             brightness = 1;
         }
         led_settings[led_index].brightness = brightness;
         int duty = (brightness * ((1 << PWM_RESOLUTION) - 1)) / 100; // Convert percentage to duty cycle
         ledc_set_duty(LEDC_LOW_SPEED_MODE, led_settings[led_index].pwm_channel, duty);
         ledc_update_duty(LEDC_LOW_SPEED_MODE, led_settings[led_index].pwm_channel);
-        //ESP_LOGI(TAG, "LED %d brightness set to %d, duty: %d", led_index, brightness, duty);
+        // ESP_LOGI(TAG, "LED %d brightness set to %d, duty: %d", led_index, brightness, duty);
     }
 }
 
 void set_led_state(int led_index, bool state)
 {
-    if (led_index >= 0 && led_index < NUM_LEDS) {
+    if (led_index >= 0 && led_index < NUM_LEDS)
+    {
         led_settings[led_index].active = state;
-        
-        if (state) {
+
+        if (state)
+        {
             int duty = (led_settings[led_index].brightness * ((1 << PWM_RESOLUTION) - 1)) / 100;
             ledc_set_duty(LEDC_LOW_SPEED_MODE, led_settings[led_index].pwm_channel, duty);
-        } else {
+        }
+        else
+        {
             ledc_set_duty(LEDC_LOW_SPEED_MODE, led_settings[led_index].pwm_channel, 0);
         }
         ledc_update_duty(LEDC_LOW_SPEED_MODE, led_settings[led_index].pwm_channel);
@@ -97,24 +102,24 @@ void led_task(void *pvParameters)
         {
             bool should_be_on = led_settings[i].active;
 
-if (led_settings[i].blink_sequence.active)
-{
-    if ((now - led_timers[i]) >= pdMS_TO_TICKS(led_settings[i].blink_sequence.delay_ms))
-    {
-        should_be_on = !should_be_on;
-        set_led_state(i, should_be_on);
-        led_timers[i] = now;
-        if (should_be_on == false) // Only decrement when turning off
-        {
-            led_settings[i].blink_sequence.num_blinks--;
-            if (led_settings[i].blink_sequence.num_blinks <= 0)
+            if (led_settings[i].blink_sequence.active)
             {
-                led_settings[i].blink_sequence.active = false;
-                set_led_state(i, led_settings[i].active);  // Return to normal state
+                if ((now - led_timers[i]) >= pdMS_TO_TICKS(led_settings[i].blink_sequence.delay_ms))
+                {
+                    should_be_on = !should_be_on;
+                    set_led_state(i, should_be_on);
+                    led_timers[i] = now;
+                    if (should_be_on == false) // Only decrement when turning off
+                    {
+                        led_settings[i].blink_sequence.num_blinks--;
+                        if (led_settings[i].blink_sequence.num_blinks <= 0)
+                        {
+                            led_settings[i].blink_sequence.active = false;
+                            set_led_state(i, led_settings[i].active); // Return to normal state
+                        }
+                    }
+                }
             }
-        }
-    }
-}
 
             // Apply display mode
             if (strcmp(led_settings[i].display_mode, "solid") == 0)
@@ -172,9 +177,9 @@ void blink(int delay_ms, int num_blinks, int led_index)
 {
     if (led_index >= 0 && led_index < NUM_LEDS)
     {
-        led_settings[led_index].blink_sequence = (BlinkSequence){delay_ms, num_blinks, true}; 
-        led_settings[led_index].active = false;  // Start with LED off
-        set_led_state(led_index, false);  // Ensure LED is initially off
+        led_settings[led_index].blink_sequence = (BlinkSequence){delay_ms, num_blinks, true};
+        led_settings[led_index].active = false; // Start with LED off
+        set_led_state(led_index, false);        // Ensure LED is initially off
     }
 }
 
