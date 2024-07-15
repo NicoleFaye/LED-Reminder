@@ -73,17 +73,23 @@ void update_led_duty(int led_index, int brightness)
     ledc_update_duty(LEDC_LOW_SPEED_MODE, led_settings[led_index].pwm_channel);
 }
 
-static bool should_sync_leds(int led1, int led2) {
+static bool should_sync_leds(int led1, int led2)
+{
     LEDSettings *led1_settings = &led_settings[led1];
     LEDSettings *led2_settings = &led_settings[led2];
 
-    return (strcmp(led1_settings->display_mode, "blink") == 0 &&
-            strcmp(led2_settings->display_mode, "blink") == 0 &&
-            led1_settings->blink_rate == led2_settings->blink_rate &&
-            led1_settings->active && led2_settings->active &&
-            led1_settings->blinking != led2_settings->blinking);
-}
+    bool blink_sync = (strcmp(led1_settings->display_mode, "blink") == 0 &&
+                       strcmp(led2_settings->display_mode, "blink") == 0 &&
+                       led1_settings->blink_rate == led2_settings->blink_rate);
 
+    bool fade_sync = (strcmp(led1_settings->display_mode, "fade") == 0 &&
+                      strcmp(led2_settings->display_mode, "fade") == 0 &&
+                      led1_settings->fade_rate == led2_settings->fade_rate);
+
+    return (led1_settings->active && led2_settings->active &&
+            ((blink_sync && led1_settings->blinking != led2_settings->blinking) ||
+             (fade_sync && led1_settings->current_brightness != led2_settings->current_brightness)));
+}
 
 void led_task(void *pvParameters)
 {
@@ -125,8 +131,10 @@ void led_task(void *pvParameters)
                 {
                     // Check if this LED should be synced with any other LED
                     bool synced = false;
-                    for (int j = 0; j < i && !synced; j++) {
-                        if (should_sync_leds(i, j)) {
+                    for (int j = 0; j < i && !synced; j++)
+                    {
+                        if (should_sync_leds(i, j))
+                        {
                             led->blinking = led_settings[j].blinking;
                             led->last_update = led_settings[j].last_update;
                             synced = true;
@@ -143,7 +151,21 @@ void led_task(void *pvParameters)
                 }
                 else if (strcmp(led->display_mode, "fade") == 0)
                 {
-                    if ((now - led->last_update) >= pdMS_TO_TICKS(led->fade_rate))
+                    // Check if this LED should be synced with any other LED
+                    bool synced = false;
+                    for (int j = 0; j < i && !synced; j++)
+                    {
+                        if (should_sync_leds(i, j))
+                        {
+                            led->current_brightness = led_settings[j].current_brightness;
+                            led->fade_direction = led_settings[j].fade_direction;
+                            led->last_update = led_settings[j].last_update;
+                            synced = true;
+                        }
+                    }
+
+                    // If not synced with any previous LED, proceed with normal fading
+                    if (!synced && (now - led->last_update) >= pdMS_TO_TICKS(led->fade_rate))
                     {
                         led->current_brightness += led->fade_direction;
                         // Check if brightness is at or below 5% or at or above 100%
