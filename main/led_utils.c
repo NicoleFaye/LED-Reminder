@@ -8,18 +8,17 @@ void initialize_ledc(void)
         .duty_resolution = PWM_RESOLUTION,
         .freq_hz = PWM_FREQUENCY,
         .speed_mode = LEDC_LOW_SPEED_MODE,
-        .timer_num = LEDC_TIMER_0
-    };
+        .timer_num = LEDC_TIMER_0};
     ledc_timer_config(&ledc_timer);
 
-    for (int i = 0; i < NUM_LEDS; i++) {
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
         ledc_channel_config_t ledc_channel = {
             .channel = led_settings[i].pwm_channel,
             .duty = 0,
             .gpio_num = led_settings[i].pin,
             .speed_mode = LEDC_LOW_SPEED_MODE,
-            .timer_sel = LEDC_TIMER_0
-        };
+            .timer_sel = LEDC_TIMER_0};
         ledc_channel_config(&ledc_channel);
     }
 }
@@ -27,11 +26,12 @@ void initialize_ledc(void)
 void initialize_led(void)
 {
     int led_pins[NUM_LEDS] = {LED1, LED2, LED3, LED4, LED5};
-    
-    for (int i = 0; i < NUM_LEDS; i++) {
+
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
         gpio_reset_pin(led_pins[i]);
         gpio_set_direction(led_pins[i], GPIO_MODE_OUTPUT);
-        
+
         led_settings[i].pin = led_pins[i];
         led_settings[i].active = false;
         strcpy(led_settings[i].function_mode, "manual");
@@ -52,14 +52,16 @@ void initialize_led(void)
 
 void set_led_brightness(int led_index, int brightness)
 {
-    if (led_index >= 0 && led_index < NUM_LEDS) {
+    if (led_index >= 0 && led_index < NUM_LEDS)
+    {
         led_settings[led_index].brightness = (brightness > 0) ? brightness : 1;
     }
 }
 
 void set_led_state(int led_index, bool state)
 {
-    if (led_index >= 0 && led_index < NUM_LEDS) {
+    if (led_index >= 0 && led_index < NUM_LEDS)
+    {
         led_settings[led_index].active = state;
     }
 }
@@ -76,44 +78,68 @@ void led_task(void *pvParameters)
     TickType_t last_wake_time = xTaskGetTickCount();
     const TickType_t frequency = pdMS_TO_TICKS(10);
 
-    while (1) {
-        for (int i = 0; i < NUM_LEDS; i++) {
+    while (1)
+    {
+        for (int i = 0; i < NUM_LEDS; i++)
+        {
             LEDSettings *led = &led_settings[i];
             TickType_t now = xTaskGetTickCount();
-            
-            if (led->blink_sequence.active) {
-                if ((now - led->last_update) >= pdMS_TO_TICKS(led->blink_sequence.delay_ms)) {
+
+            if (led->blink_sequence.active)
+            {
+                if ((now - led->last_update) >= pdMS_TO_TICKS(led->blink_sequence.delay_ms))
+                {
                     led->active = !led->active;
                     led->last_update = now;
-                    if (!led->active) {
+                    if (!led->active)
+                    {
                         led->blink_sequence.num_blinks--;
-                        if (led->blink_sequence.num_blinks <= 0) {
+                        if (led->blink_sequence.num_blinks <= 0)
+                        {
                             led->blink_sequence.active = false;
                             led->active = false;
                         }
                     }
                 }
                 update_led_duty(i, led->active ? led->brightness : 0);
-            } else if (led->active) {
-                if (strcmp(led->display_mode, "solid") == 0) {
+            }
+            else if (led->active)
+            {
+                if (strcmp(led->display_mode, "solid") == 0)
+                {
                     update_led_duty(i, led->brightness);
-                } else if (strcmp(led->display_mode, "blink") == 0) {
-                    if ((now - led->last_update) >= pdMS_TO_TICKS(led->blink_rate)) {
+                }
+                else if (strcmp(led->display_mode, "blink") == 0)
+                {
+                    if ((now - led->last_update) >= pdMS_TO_TICKS(led->blink_rate))
+                    {
                         led->blinking = !led->blinking;
                         led->last_update = now;
                     }
                     update_led_duty(i, led->blinking ? led->brightness : 0);
-                } else if (strcmp(led->display_mode, "fade") == 0) {
-                    if ((now - led->last_update) >= pdMS_TO_TICKS(led->fade_rate)) {
+                }
+                else if (strcmp(led->display_mode, "fade") == 0)
+                {
+                    if ((now - led->last_update) >= pdMS_TO_TICKS(led->fade_rate))
+                    {
                         led->current_brightness += led->fade_direction;
-                        if (led->current_brightness >= led->brightness || led->current_brightness <= 0) {
+                        // Check if brightness is at or below 5% or at or above 100%
+                        if (led->current_brightness >= led->brightness || led->current_brightness <= (0.03 * led->brightness))
+                        {
                             led->fade_direction *= -1;
+                            // Ensure brightness does not go below 5%
+                            if (led->current_brightness < (0.03 * led->brightness))
+                            {
+                                led->current_brightness = (0.03 * led->brightness);
+                            }
                         }
                         led->last_update = now;
                     }
                     update_led_duty(i, led->current_brightness);
                 }
-            } else {
+            }
+            else
+            {
                 update_led_duty(i, 0);
                 led->current_brightness = 0;
                 led->fade_direction = 1;
@@ -126,7 +152,8 @@ void led_task(void *pvParameters)
 
 void blink(int delay_ms, int num_blinks, int led_index)
 {
-    if (led_index >= 0 && led_index < NUM_LEDS) {
+    if (led_index >= 0 && led_index < NUM_LEDS)
+    {
         led_settings[led_index].blink_sequence = (BlinkSequence){delay_ms, num_blinks, true};
         led_settings[led_index].active = true;
         led_settings[led_index].last_update = xTaskGetTickCount();
@@ -135,7 +162,8 @@ void blink(int delay_ms, int num_blinks, int led_index)
 
 void blinkSet(int delay_ms, int num_blinks, int led_indices[], int num_leds)
 {
-    for (int i = 0; i < num_leds; i++) {
+    for (int i = 0; i < num_leds; i++)
+    {
         blink(delay_ms, num_blinks, led_indices[i]);
     }
 }
