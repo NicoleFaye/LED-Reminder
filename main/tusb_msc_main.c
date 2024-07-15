@@ -62,16 +62,15 @@ void app_main(void)
     ESP_LOGI(TAG, "Initializing LED...");
     initialize_led();
 
-    // Apply configuration
-    ESP_LOGI(TAG, "Applying configuration...");
-    apply_configuration();
-
-
     // Initialize WiFi
     ESP_LOGI(TAG, "Initializing WiFi...");
     wifi_init();
 
+    // Apply configuration
+    ESP_LOGI(TAG, "Applying configuration...");
+    apply_configuration();
+
     // Initialize SNTP
-    ESP_LOGI(TAG, "Initializing SNTP...");
-    initialize_sntp("PST8PDT,M3.2.0,M11.1.0");
+    //ESP_LOGI(TAG, "Initializing SNTP...");
+    //initialize_sntp("PST8PDT,M3.2.0,M11.1.0");
 }

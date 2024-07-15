@@ -20,8 +20,12 @@ static void apply_wifi_config(const KeyValuePair *config, int count)
     if (strlen(ssid) > 0 && strlen(password) > 0)
     {
         ESP_LOGI(TAG, "Configuring WiFi with SSID: %s", ssid);
-        // Call function to set up WiFi
-        // wifi_setup(ssid, password);
+        esp_err_t result = wifi_connect(ssid, password);
+        if (result == ESP_OK) {
+            ESP_LOGI(TAG, "WiFi connected successfully");
+        } else {
+            ESP_LOGE(TAG, "Failed to connect to WiFi");
+        }
     }
 }
 
@@ -116,9 +120,21 @@ static void apply_time_config(const KeyValuePair *config, int count)
 
     if (strlen(timezone) > 0)
     {
-        ESP_LOGI(TAG, "Setting timezone to: %s", timezone);
-        // Call function to set timezone
-        // set_timezone(timezone);
+        const char* posix_tz = get_timezone(timezone);
+        if (posix_tz != NULL)
+        {
+            ESP_LOGI(TAG, "Setting timezone to: %s (POSIX: %s)", timezone, posix_tz);
+            // Call function to set timezone
+            initialize_sntp(posix_tz);
+        }
+        else
+        {
+            ESP_LOGE(TAG, "Invalid timezone: %s", timezone);
+        }
+    }
+    else
+    {
+        ESP_LOGW(TAG, "No timezone specified in configuration");
     }
 }
 

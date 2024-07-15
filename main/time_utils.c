@@ -2,15 +2,51 @@
 
 void initialize_sntp(const char* timezone)
 {
-    // Set the time zone before initializing SNTP
-    // for formats see https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
-    //setenv("TZ", "PST8PDT,M3.2.0,M11.1.0", 1); // Set timezone to Eastern Time (US)
-    setenv("TZ", timezone, 1); // Set timezone to Eastern Time (US)
-    tzset();                                   // Apply the timezone change
+    ESP_LOGI(TAG, "Initializing SNTP");
+    
+    // Set the time zone
+    setenv("TZ", timezone, 1);
+    tzset();
 
     esp_sntp_setoperatingmode(SNTP_OPMODE_POLL);
     esp_sntp_setservername(0, "pool.ntp.org");
     esp_sntp_init();
+
+    // Wait for time to be set
+    time_t now = 0;
+    struct tm timeinfo = {0};
+    int retry = 0;
+    const int retry_count = 15;
+    while (sntp_get_sync_status() == SNTP_SYNC_STATUS_RESET && ++retry < retry_count) {
+        ESP_LOGI(TAG, "Waiting for system time to be set... (%d/%d)", retry, retry_count);
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
+    }
+
+    time(&now);
+    localtime_r(&now, &timeinfo);
+
+    if (timeinfo.tm_year < (2016 - 1900)) {
+        ESP_LOGE(TAG, "System time NOT set.");
+    } else {
+        ESP_LOGI(TAG, "System time is set.");
+        print_current_time();
+    }
+}
+
+void print_current_time(void)
+{
+    time_t now;
+    struct tm timeinfo;
+    char strftime_buf[64];
+
+    time(&now);
+    localtime_r(&now, &timeinfo);
+
+    // Format the time string
+    strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
+
+    // Print the formatted time
+    ESP_LOGI(TAG, "Current time: %s", strftime_buf);
 }
 
 void check_daylight_saving(void)

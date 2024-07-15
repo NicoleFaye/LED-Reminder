@@ -59,5 +59,6 @@
 #define WIFI_FAIL_BIT BIT1
 
 void wifi_init(void);
+esp_err_t wifi_connect(const char* ssid, const char* password);
 
 #endif // WIFI_MANAGER_H

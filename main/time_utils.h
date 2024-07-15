@@ -17,6 +17,7 @@ extern "C" {
 void initialize_sntp(const char*);
 void check_daylight_saving(void);
 void initialize_nvs(void);
+void print_current_time(void);
 
 #ifdef __cplusplus
 }
