@@ -42,11 +42,14 @@ typedef struct {
     int blink_rate;
     int fade_rate;
     int brightness;
+    int current_brightness;
+    int fade_direction;
     bool blinking;
     BlinkSequence blink_sequence;
     bool active;
-    int pin;  // Add this to store the GPIO pin number
+    int pin;
     ledc_channel_t pwm_channel;
+    TickType_t last_update;
 } LEDSettings;
 
 // Global array of LED settings
