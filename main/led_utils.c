@@ -23,6 +23,62 @@ void initialize_ledc(void)
     }
 }
 
+void led_offset_task(void *pvParameters)
+{
+    TickType_t last_wake_time = xTaskGetTickCount();
+    const TickType_t frequency = pdMS_TO_TICKS(100); // Check every 100 ms
+
+    while (1)
+    {
+        for (int i = 0; i < NUM_LEDS; i++)
+        {
+            LEDSettings *led = &led_settings[i];
+            
+            if (strcmp(led->function_mode, "offset") == 0)
+            {
+                if (!led->active)
+                {
+                    // If LED is off, check if it's time to turn it on
+                    if ((xTaskGetTickCount() - led->last_update) >= pdMS_TO_TICKS(led->offset_seconds * 1000))
+                    {
+                        set_led_state(i, true);
+                        ESP_LOGI(TAG, "LED %d turned on after offset", i+1);
+                    }
+                }
+            }
+        }
+
+        vTaskDelayUntil(&last_wake_time, frequency);
+    }
+}
+
+void led_fixed_interval_task(void *pvParameters)
+{
+    TickType_t last_wake_time = xTaskGetTickCount();
+    const TickType_t frequency = pdMS_TO_TICKS(1000); // Check every second
+
+    while (1)
+    {
+        for (int i = 0; i < NUM_LEDS; i++)
+        {
+            LEDSettings *led = &led_settings[i];
+            
+            if (strcmp(led->function_mode, "fixed_interval") == 0)
+            {
+                // Check if it's time to toggle the LED
+                if ((xTaskGetTickCount() - led->last_update) >= pdMS_TO_TICKS(led->fixed_interval_seconds * 1000))
+                {
+                    set_led_state(i, true);
+                    led->last_update = xTaskGetTickCount();
+                    ESP_LOGI(TAG, "LED %d toggled at fixed interval", i+1);
+                }
+            }
+        }
+
+        vTaskDelayUntil(&last_wake_time, frequency);
+    }
+}
+
 void led_set_time_task(void *pvParameters)
 {
     TickType_t last_wake_time = xTaskGetTickCount();
@@ -88,6 +144,8 @@ void initialize_led(void)
     initialize_ledc();
     xTaskCreate(led_task, "led_task", 4096, NULL, 5, NULL);
     xTaskCreate(led_set_time_task, "led_set_time_task", 4096, NULL, 5, NULL);
+    xTaskCreate(led_offset_task, "led_offset_task", 4096, NULL, 5, NULL);
+    xTaskCreate(led_fixed_interval_task, "led_fixed_interval_task", 4096, NULL, 5, NULL);
 }
 
 void set_led_brightness(int led_index, int brightness)
@@ -98,20 +156,37 @@ void set_led_brightness(int led_index, int brightness)
     }
 }
 
-void set_led_state(int led_index, bool state)
-{
-    if (led_index >= 0 && led_index < NUM_LEDS)
-    {
-        led_settings[led_index].active = state;
-    }
-}
-
 void update_led_duty(int led_index, int brightness)
 {
     int duty = (brightness * ((1 << PWM_RESOLUTION) - 1)) / 100;
     ledc_set_duty(LEDC_LOW_SPEED_MODE, led_settings[led_index].pwm_channel, duty);
     ledc_update_duty(LEDC_LOW_SPEED_MODE, led_settings[led_index].pwm_channel);
 }
+
+void set_led_state(int led_index, bool state)
+{
+    if (led_index >= 0 && led_index < NUM_LEDS)
+    {
+        LEDSettings *led = &led_settings[led_index];
+        led->active = state;
+
+        if (!state && strcmp(led->function_mode, "offset") == 0)
+        {
+            // Reset the timer when the LED is turned off in offset mode
+            led->last_update = xTaskGetTickCount();
+        }
+
+        // Update the LED's physical state
+        update_led_duty(led_index, state ? led->brightness : 0);
+
+        ESP_LOGI(TAG, "LED %d state set to %s", led_index + 1, state ? "ON" : "OFF");
+    }
+    else
+    {
+        ESP_LOGE(TAG, "Invalid LED index: %d", led_index);
+    }
+}
+
 
 static bool should_sync_leds(int led1, int led2)
 {
