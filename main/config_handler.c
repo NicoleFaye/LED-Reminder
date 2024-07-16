@@ -21,9 +21,12 @@ static void apply_wifi_config(const KeyValuePair *config, int count)
     {
         ESP_LOGI(TAG, "Configuring WiFi with SSID: %s", ssid);
         esp_err_t result = wifi_connect(ssid, password);
-        if (result == ESP_OK) {
+        if (result == ESP_OK)
+        {
             ESP_LOGI(TAG, "WiFi connected successfully");
-        } else {
+        }
+        else
+        {
             ESP_LOGE(TAG, "Failed to connect to WiFi");
         }
     }
@@ -35,27 +38,32 @@ static void apply_led_config(const KeyValuePair *config, int count)
     {
         // Extract the LED number from the key
         int led_num;
-        if (sscanf(config[i].key, "led%d_", &led_num) != 1) {
+        if (sscanf(config[i].key, "led%d_", &led_num) != 1)
+        {
             continue; // Skip if the key doesn't start with "ledX_"
         }
 
         // Find the corresponding LED in led_settings based on pin number
         int led_index = -1;
-        for (int j = 0; j < NUM_LEDS; j++) {
-            if (led_settings[j].pin == led_num) {
+        for (int j = 0; j < NUM_LEDS; j++)
+        {
+            if (led_settings[j].pin == led_num)
+            {
                 led_index = j;
                 break;
             }
         }
 
-        if (led_index == -1) {
+        if (led_index == -1)
+        {
             ESP_LOGW(TAG, "No LED found for pin %d", led_num);
             continue; // Skip if no matching LED found
         }
 
         // Extract the setting name
         const char *setting = strchr(config[i].key, '_');
-        if (setting == NULL) {
+        if (setting == NULL)
+        {
             continue; // Skip if there's no underscore in the key
         }
         setting++; // Move past the underscore
@@ -74,6 +82,20 @@ static void apply_led_config(const KeyValuePair *config, int count)
         {
             led_settings[led_index].set_time_days = atoi(config[i].value);
             ESP_LOGI(TAG, "Setting LED %d set time days to %d", led_num, led_settings[led_index].set_time_days);
+        }
+        else if (strcmp(setting, "set_time") == 0)
+        {
+            int hours, minutes;
+            if (sscanf(config[i].value, "%d:%d", &hours, &minutes) == 2)
+            {
+                led_settings[led_index].set_time_hours = hours;
+                led_settings[led_index].set_time_minutes = minutes;
+                ESP_LOGI(TAG, "Setting LED %d set time to %02d:%02d", led_num, hours, minutes);
+            }
+            else
+            {
+                ESP_LOGE(TAG, "Invalid set_time format for LED %d: %s", led_num, config[i].value);
+            }
         }
         else if (strcmp(setting, "fixed_interval_seconds") == 0)
         {
@@ -120,7 +142,7 @@ static void apply_time_config(const KeyValuePair *config, int count)
 
     if (strlen(timezone) > 0)
     {
-        const char* posix_tz = get_timezone(timezone);
+        const char *posix_tz = get_timezone(timezone);
         if (posix_tz != NULL)
         {
             ESP_LOGI(TAG, "Setting timezone to: %s (POSIX: %s)", timezone, posix_tz);

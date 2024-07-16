@@ -52,6 +52,7 @@ typedef struct {
     int pin;
     ledc_channel_t pwm_channel;
     TickType_t last_update;
+    time_t last_on_time;  // New field to store the last time the LED was turned on
 } LEDSettings;
 
 // Global array of LED settings
@@ -63,5 +64,6 @@ void set_led_brightness(int led_index, int brightness);
 void led_task(void *pvParameters);
 void blink(int delay_ms, int num_blinks, int led_index);
 void blinkSet(int delay_ms, int num_blinks, int led_indices[], int num_leds);
+void led_set_time_task(void *pvParameters);  // New function for handling set time functionality
 
 #endif

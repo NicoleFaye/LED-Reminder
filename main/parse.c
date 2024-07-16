@@ -74,6 +74,14 @@ int validate_led_setting(KeyValuePair kv, int led_num)
             return 0; // Invalid brightness
         }
     }
+    else if (strstr(kv.key, "set_time_days") != NULL)
+    {
+        int days = atoi(kv.value);
+        if (days < 0 || days > 365 * 10)
+        {
+            return 0; // Invalid days
+        }
+    }
     else if (strstr(kv.key, "set_time") != NULL)
     {
         // Validate the time format (HH:MM)

@@ -23,6 +23,44 @@ void initialize_ledc(void)
     }
 }
 
+void led_set_time_task(void *pvParameters)
+{
+    TickType_t last_wake_time = xTaskGetTickCount();
+    const TickType_t frequency = pdMS_TO_TICKS(1000); // Check every second
+
+    while (1)
+    {
+        time_t now;
+        struct tm timeinfo;
+        time(&now);
+        localtime_r(&now, &timeinfo);
+
+        for (int i = 0; i < NUM_LEDS; i++)
+        {
+            LEDSettings *led = &led_settings[i];
+            
+            if (strcmp(led->function_mode, "set_time") == 0)
+            {
+                // Check if it's time to turn on the LED
+                if (timeinfo.tm_hour == led->set_time_hours && 
+                    timeinfo.tm_min == led->set_time_minutes &&
+                    timeinfo.tm_sec == 0)
+                {
+                    // Check if enough days have passed since last activation
+                    if (difftime(now, led->last_on_time) >= (led->set_time_days * 24 * 60 * 60))
+                    {
+                        set_led_state(i, true);
+                        led->last_on_time = now;
+                        ESP_LOGI(TAG, "LED %d turned on at set time", i+1);
+                    }
+                }
+            }
+        }
+
+        vTaskDelayUntil(&last_wake_time, frequency);
+    }
+}
+
 void initialize_led(void)
 {
     int led_pins[NUM_LEDS] = {LED1, LED2, LED3, LED4, LED5};
@@ -44,10 +82,12 @@ void initialize_led(void)
         led_settings[i].fade_rate = 50;
         led_settings[i].blink_sequence = (BlinkSequence){0, 0, false};
         led_settings[i].last_update = 0;
+        led_settings[i].last_on_time = 0;
     }
 
     initialize_ledc();
     xTaskCreate(led_task, "led_task", 4096, NULL, 5, NULL);
+    xTaskCreate(led_set_time_task, "led_set_time_task", 4096, NULL, 5, NULL);
 }
 
 void set_led_brightness(int led_index, int brightness)
