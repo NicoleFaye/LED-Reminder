@@ -45,13 +45,6 @@ void app_main(void)
 
     ESP_LOGI(TAG, "Config check return value: %i", check_configuration(BASE_PATH "/settings.txt"));
 
-    // Initialize USB MSC
-    if (msc_exposed)
-    {
-        ESP_LOGI(TAG, "Exposing MSC...");
-        expose_msc();
-    }
-
     // Initialize REPL
     if (repl_enabled)
     {
@@ -70,7 +63,10 @@ void app_main(void)
     ESP_LOGI(TAG, "Applying configuration...");
     apply_configuration();
 
-    // Initialize SNTP
-    //ESP_LOGI(TAG, "Initializing SNTP...");
-    //initialize_sntp("PST8PDT,M3.2.0,M11.1.0");
+    // Initialize USB MSC
+    if (msc_exposed)
+    {
+        ESP_LOGI(TAG, "Exposing MSC...");
+        expose_msc();
+    }
 }
