@@ -36,6 +36,7 @@ typedef struct {
 typedef struct {
     char function_mode[20];
     int offset_seconds;
+    bool set_days[7];
     int set_time_days;
     int set_time_hours;
     int set_time_minutes;
@@ -52,7 +53,7 @@ typedef struct {
     int pin;
     ledc_channel_t pwm_channel;
     TickType_t last_update;
-    time_t last_on_time;  // New field to store the last time the LED was turned on
+    time_t last_on_time;  
 } LEDSettings;
 
 // Global array of LED settings
@@ -64,6 +65,7 @@ void set_led_brightness(int led_index, int brightness);
 void led_task(void *pvParameters);
 void blink(int delay_ms, int num_blinks, int led_index);
 void blinkSet(int delay_ms, int num_blinks, int led_indices[], int num_leds);
-void led_set_time_task(void *pvParameters);  // New function for handling set time functionality
+void led_set_time_task(void *pvParameters); 
+void led_set_days_task(void *pvParameters);
 
 #endif

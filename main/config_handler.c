@@ -1,9 +1,11 @@
 #include "config_handler.h"
 
+char ssid[64] = "";
+char password[64] = "";
+const char *posix_tz = NULL;
+
 static void apply_wifi_config(const KeyValuePair *config, int count)
 {
-    char ssid[64] = "";
-    char password[64] = "";
 
     for (int i = 0; i < count; i++)
     {
@@ -16,20 +18,10 @@ static void apply_wifi_config(const KeyValuePair *config, int count)
             strncpy(password, config[i].value, sizeof(password) - 1);
         }
     }
-
-    if (strlen(ssid) > 0 && strlen(password) > 0)
-    {
-        ESP_LOGI(TAG, "Configuring WiFi with SSID: %s", ssid);
-        esp_err_t result = wifi_connect(ssid, password);
-        if (result == ESP_OK)
-        {
-            ESP_LOGI(TAG, "WiFi connected successfully");
-        }
-        else
-        {
-            ESP_LOGE(TAG, "Failed to connect to WiFi");
-        }
-    }
+}
+void connect_to_wifi(void)
+{
+    wifi_connect(ssid, password);
 }
 
 static void apply_led_config(const KeyValuePair *config, int count)
@@ -77,6 +69,44 @@ static void apply_led_config(const KeyValuePair *config, int count)
         {
             led_settings[led_index].offset_seconds = atoi(config[i].value);
             ESP_LOGI(TAG, "Setting LED %d offset seconds to %d", led_num, led_settings[led_index].offset_seconds);
+        }
+        else if (strcmp(setting, "set_days") == 0)
+        {
+            // Initialize all days to false
+            for (int j = 0; j < 7; j++)
+            {
+                led_settings[led_index].set_days[j] = false;
+            }
+
+            // Create a mutable copy of the string
+            char value_copy[MAX_LINE_LENGTH];
+            strncpy(value_copy, config[i].value, sizeof(value_copy) - 1);
+            value_copy[sizeof(value_copy) - 1] = '\0'; // Ensure null-termination
+
+            char *day_str = strtok(value_copy, ",");
+            while (day_str != NULL)
+            {
+                if (strcmp(day_str, "sunday") == 0)
+                    led_settings[led_index].set_days[0] = true;
+                else if (strcmp(day_str, "monday") == 0)
+                    led_settings[led_index].set_days[1] = true;
+                else if (strcmp(day_str, "tuesday") == 0)
+                    led_settings[led_index].set_days[2] = true;
+                else if (strcmp(day_str, "wednesday") == 0)
+                    led_settings[led_index].set_days[3] = true;
+                else if (strcmp(day_str, "thursday") == 0)
+                    led_settings[led_index].set_days[4] = true;
+                else if (strcmp(day_str, "friday") == 0)
+                    led_settings[led_index].set_days[5] = true;
+                else if (strcmp(day_str, "saturday") == 0)
+                    led_settings[led_index].set_days[6] = true;
+                day_str = strtok(NULL, ",");
+            }
+            ESP_LOGI(TAG, "Setting LED %d set days", led_num);
+            for (int j = 0; j < 7; j++)
+            {
+                ESP_LOGI(TAG, "Day %d: %d", j, led_settings[led_index].set_days[j]);
+            }
         }
         else if (strcmp(setting, "set_time_days") == 0)
         {
@@ -142,12 +172,13 @@ static void apply_time_config(const KeyValuePair *config, int count)
 
     if (strlen(timezone) > 0)
     {
-        const char *posix_tz = get_timezone(timezone);
+        // const char *posix_tz = get_timezone(timezone);
+        posix_tz = get_timezone(timezone);
         if (posix_tz != NULL)
         {
             ESP_LOGI(TAG, "Setting timezone to: %s (POSIX: %s)", timezone, posix_tz);
             // Call function to set timezone
-            initialize_sntp(posix_tz);
+            // initialize_sntp(posix_tz);
         }
         else
         {
@@ -158,6 +189,11 @@ static void apply_time_config(const KeyValuePair *config, int count)
     {
         ESP_LOGW(TAG, "No timezone specified in configuration");
     }
+}
+
+void sync_time(void)
+{
+    initialize_sntp(posix_tz);
 }
 
 void apply_configuration(void)

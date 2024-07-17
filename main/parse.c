@@ -53,7 +53,7 @@ int validate_led_setting(KeyValuePair kv, int led_num)
     if (strstr(kv.key, "function_mode") != NULL)
     {
         if (strcmp(kv.value, "manual") != 0 && strcmp(kv.value, "offset") != 0 &&
-            strcmp(kv.value, "set_time") != 0 && strcmp(kv.value, "fixed_interval") != 0)
+            strcmp(kv.value, "set_time") != 0 && strcmp(kv.value, "fixed_interval") != 0 && strcmp(kv.value, "set_days") != 0)
         {
             return 0; // Invalid function mode
         }
@@ -255,110 +255,4 @@ KeyValuePair *parse_configuration(const char *filename, int *length)
     ESP_LOGI(TAG, "Parsed %d key-value pairs from configuration file", kv_count);
     return kv_array;
 }
-
-void parse_and_handle_settings(void) {
-    int kv_count;
-    KeyValuePair *config = parse_configuration(BASE_PATH "/settings.txt", &kv_count);
-    if (config == NULL) {
-        ESP_LOGE(TAG, "Failed to parse configuration");
-        return;
-    }
-
-    char timezone[64] = "";
-    char ssid[64] = "";
-    char password[64] = "";
-    LEDSettings led_settings[5] = {0};
-
-    for (int i = 0; i < kv_count; i++) {
-        ESP_LOGI(TAG, "%s = %s", config[i].key, config[i].value);
-
-        if (strcmp(config[i].key, "timezone") == 0) {
-            strncpy(timezone, config[i].value, sizeof(timezone) - 1);
-        } else if (strcmp(config[i].key, "ssid") == 0) {
-            strncpy(ssid, config[i].value, sizeof(ssid) - 1);
-        } else if (strcmp(config[i].key, "password") == 0) {
-            strncpy(password, config[i].value, sizeof(password) - 1);
-        } else {
-            // Handle LED settings
-            for (int led = 1; led <= 5; led++) {
-                char led_prefix[10];
-                snprintf(led_prefix, sizeof(led_prefix), "led%d_", led);
-
-                if (strncmp(config[i].key, led_prefix, strlen(led_prefix)) == 0) {
-                    char* setting = config[i].key + strlen(led_prefix);
-                    
-                    if (strcmp(setting, "function_mode") == 0) {
-                        strncpy(led_settings[led-1].function_mode, config[i].value, sizeof(led_settings[led-1].function_mode) - 1);
-                    } else if (strcmp(setting, "offset_seconds") == 0) {
-                        led_settings[led-1].offset_seconds = atoi(config[i].value);
-                    } else if (strcmp(setting, "set_time_days") == 0) {
-                        led_settings[led-1].set_time_days = atoi(config[i].value);
-                    } else if (strcmp(setting, "set_time") == 0) {
-                        sscanf(config[i].value, "%d:%d", &led_settings[led-1].set_time_hours, &led_settings[led-1].set_time_minutes);
-                    } else if (strcmp(setting, "fixed_interval_seconds") == 0) {
-                        led_settings[led-1].fixed_interval_seconds = atoi(config[i].value);
-                    } else if (strcmp(setting, "display_mode") == 0) {
-                        strncpy(led_settings[led-1].display_mode, config[i].value, sizeof(led_settings[led-1].display_mode) - 1);
-                    } else if (strcmp(setting, "blink_rate") == 0) {
-                        led_settings[led-1].blink_rate = atoi(config[i].value);
-                    } else if (strcmp(setting, "fade_rate") == 0) {
-                        led_settings[led-1].fade_rate = atoi(config[i].value);
-                    } else if (strcmp(setting, "brightness") == 0) {
-                        led_settings[led-1].brightness = atoi(config[i].value);
-                    }
-                }
-            }
-        }
-    }
-
-    // Handle parsed settings
-    if (strlen(timezone) > 0) {
-        ESP_LOGI(TAG, "Setting timezone to: %s", timezone);
-        // Call function to set timezone
-        // set_timezone(timezone);
-    }
-
-    if (strlen(ssid) > 0 && strlen(password) > 0) {
-        ESP_LOGI(TAG, "Connecting to WiFi SSID: %s", ssid);
-        // Call function to connect to WiFi
-        // connect_wifi(ssid, password);
-    }
-
-    for (int led = 0; led < 5; led++) {
-        ESP_LOGI(TAG, "Configuring LED %d", led + 1);
-        ESP_LOGI(TAG, "  Function mode: %s", led_settings[led].function_mode);
-        ESP_LOGI(TAG, "  Display mode: %s", led_settings[led].display_mode);
-        ESP_LOGI(TAG, "  Brightness: %d", led_settings[led].brightness);
-
-        if (strcmp(led_settings[led].function_mode, "manual") == 0) {
-            // Handle manual mode
-        } else if (strcmp(led_settings[led].function_mode, "offset") == 0) {
-            ESP_LOGI(TAG, "  Offset seconds: %d", led_settings[led].offset_seconds);
-            // Handle offset mode
-        } else if (strcmp(led_settings[led].function_mode, "set_time") == 0) {
-            ESP_LOGI(TAG, "  Set time days: %d", led_settings[led].set_time_days);
-            // Handle set time mode
-        } else if (strcmp(led_settings[led].function_mode, "fixed_interval") == 0) {
-            ESP_LOGI(TAG, "  Fixed interval seconds: %d", led_settings[led].fixed_interval_seconds);
-            // Handle fixed interval mode
-        }
-
-        if (strcmp(led_settings[led].display_mode, "solid") == 0) {
-            // Handle solid mode
-        } else if (strcmp(led_settings[led].display_mode, "blink") == 0) {
-            ESP_LOGI(TAG, "  Blink rate: %d", led_settings[led].blink_rate);
-            // Handle blink mode
-        } else if (strcmp(led_settings[led].display_mode, "fade") == 0) {
-            ESP_LOGI(TAG, "  Fade rate: %d", led_settings[led].fade_rate);
-            // Handle fade mode
-        }
-
-        // Set LED brightness
-        // set_led_brightness(led + 1, led_settings[led].brightness);
-    }
-
-    // Free the allocated memory
-    free(config);
-}
-
 

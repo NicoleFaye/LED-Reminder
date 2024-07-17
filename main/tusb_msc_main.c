@@ -69,4 +69,7 @@ void app_main(void)
         ESP_LOGI(TAG, "Exposing MSC...");
         expose_msc();
     }
+    connect_to_wifi();
+    sync_time();
+
 }

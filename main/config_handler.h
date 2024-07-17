@@ -15,5 +15,8 @@
  * the settings to various subsystems (WiFi, LED, Time, etc.).
  */
 void apply_configuration(void);
+void connect_to_wifi(void);
+void sync_time(void);
+
 
 #endif // CONFIG_HANDLER_H
