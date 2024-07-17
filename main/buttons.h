@@ -12,11 +12,13 @@
 #include "freertos/event_groups.h"
 #include "led_utils.h"
 
-#define BUTTON1 6
-#define BUTTON2 7
-#define BUTTON3 8
-#define BUTTON4 9
-#define BUTTON5 10
+#define BUTTON1 7
+#define BUTTON2 8
+#define BUTTON3 9
+#define BUTTON4 10
+#define BUTTON5 11
+
+#define NUM_BUTTONS 5
 
 #define BUTTON_LONG_PRESS_DELAY_MS 1500
 

@@ -15,9 +15,9 @@
 
 #define LED1 1
 #define LED2 2
-#define LED3 3
-#define LED4 4
-#define LED5 5
+#define LED3 4
+#define LED4 5
+#define LED5 6
 
 #define NUM_LEDS 5
 #define WIFI_CONNECTED_BLINK_DELAY_MS 500

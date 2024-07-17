@@ -25,33 +25,34 @@ button_callback_t button_long_press_callbacks[] = {button1_long_press_callback, 
 
 static bool long_press_detected[5] = {false, false, false, false, false}; // Flags for long press detection
 
+static int buttons[] = {BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5}; // Array of button pins
+
 void button_task(void *pvParameter) {
-    int pin;
     bool button_state;
     static bool last_button_state[5] = {1, 1, 1, 1, 1};
     static uint32_t button_press_timestamp[5] = {0}; // Timestamps for when buttons were pressed
 
     while (1) {
         uint32_t current_time = xTaskGetTickCount() * portTICK_PERIOD_MS; // Get current time in ms
-        for (pin = BUTTON1; pin <= BUTTON5; pin++) {
-            button_state = gpio_get_level(pin);
-            if (button_state == 0 && last_button_state[pin - BUTTON1] == 1) {
+        for (int pinIndex = 0; pinIndex <= NUM_BUTTONS; pinIndex++){
+            button_state = gpio_get_level(buttons[pinIndex]);
+            if (button_state == 0 && last_button_state[pinIndex] == 1) {
                 // Button press detected, record timestamp
-                button_press_timestamp[pin - BUTTON1] = current_time;
-                long_press_detected[pin - BUTTON1] = false; // Reset long press flag
-            } else if (button_state == 0 && !long_press_detected[pin - BUTTON1] && (current_time - button_press_timestamp[pin - BUTTON1] >= BUTTON_LONG_PRESS_DELAY_MS)) {
+                button_press_timestamp[pinIndex] = current_time;
+                long_press_detected[pinIndex] = false; // Reset long press flag
+            } else if (button_state == 0 && !long_press_detected[pinIndex] && (current_time - button_press_timestamp[pinIndex] >= BUTTON_LONG_PRESS_DELAY_MS)) {
                 // Button held for 3 seconds, call long press callback and set flag to avoid short press callback
-                button_long_press_callbacks[pin - BUTTON1]();
-                long_press_detected[pin - BUTTON1] = true;
-            } else if (button_state == 1 && last_button_state[pin - BUTTON1] == 0) {
-                if (!long_press_detected[pin - BUTTON1] && (current_time - button_press_timestamp[pin - BUTTON1] < BUTTON_LONG_PRESS_DELAY_MS)) {
+                button_long_press_callbacks[pinIndex]();
+                long_press_detected[pinIndex] = true;
+            } else if (button_state == 1 && last_button_state[pinIndex] == 0) {
+                if (!long_press_detected[pinIndex] && (current_time - button_press_timestamp[pinIndex] < BUTTON_LONG_PRESS_DELAY_MS)) {
                     // Button released before x seconds and no long press detected, call short press callback
-                    button_callbacks[pin - BUTTON1]();
+                    button_callbacks[pinIndex]();
                 }
                 // Reset the long press flag here if you want to allow a long press on the next button down event
-                long_press_detected[pin - BUTTON1] = false;
+                long_press_detected[pinIndex] = false;
             }
-            last_button_state[pin - BUTTON1] = button_state;
+            last_button_state[pinIndex] = button_state;
         }
         vTaskDelay(10 / portTICK_PERIOD_MS);
     }
