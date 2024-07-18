@@ -59,18 +59,29 @@ void led_fixed_interval_task(void *pvParameters)
 
     while (1)
     {
+        time_t now;
+        struct tm timeinfo;
+        time(&now);
+        localtime_r(&now, &timeinfo);
+
         for (int i = 0; i < NUM_LEDS; i++)
         {
             LEDSettings *led = &led_settings[i];
 
             if (strcmp(led->function_mode, "fixed_interval") == 0)
             {
-                // Check if it's time to toggle the LED
-                if ((xTaskGetTickCount() - led->last_update) >= pdMS_TO_TICKS(led->fixed_interval_seconds * 1000))
+                // Calculate seconds since midnight
+                int seconds_since_midnight = timeinfo.tm_hour * 3600 + timeinfo.tm_min * 60 + timeinfo.tm_sec;
+                
+                // Calculate seconds since reference time
+                int ref_seconds = led->set_time_hours * 3600 + led->set_time_minutes * 60;
+                int seconds_since_ref = (seconds_since_midnight - ref_seconds + 86400) % 86400;
+                
+                // Check if it's time to activate the LED
+                if (seconds_since_ref % led->fixed_interval_seconds == 0)
                 {
                     set_led_state(i, true);
-                    led->last_update = xTaskGetTickCount();
-                    ESP_LOGI(TAG, "LED %d toggled at fixed interval", i + 1);
+                    ESP_LOGI(TAG, "LED %d turned on by fixed interval", i + 1);
                 }
             }
         }
