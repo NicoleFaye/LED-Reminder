@@ -36,17 +36,9 @@ static void apply_led_config(const KeyValuePair *config, int count)
         }
 
         // Find the corresponding LED in led_settings based on pin number
-        int led_index = -1;
-        for (int j = 0; j < NUM_LEDS; j++)
-        {
-            if (led_settings[j].pin == led_num)
-            {
-                led_index = j;
-                break;
-            }
-        }
+        int led_index = led_num - 1;
 
-        if (led_index == -1)
+        if (led_index <0 || led_index >= NUM_LEDS)
         {
             ESP_LOGW(TAG, "No LED found for pin %d", led_num);
             continue; // Skip if no matching LED found
