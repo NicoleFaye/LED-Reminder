@@ -12,26 +12,31 @@ password=your_network_password
 # LED/Button Pair 1 Settings
 # Function mode options:
 # - manual: LED/button operates manually
-# - offset: LED/button operates with an offset in seconds
+# - offset: LED/button operates with an offset in seconds since the last time the button was pressed
 # - set_time: LED/button operates at a set time every x days
 # - set_days: LED/button operates at a set time each day of the week selected
-# - fixed_interval: LED/button operates at fixed intervals since startup in seconds
+# - fixed_interval: LED/button operates at fixed intervals starting at set_time
 led1_function_mode=manual
 
 # Used only if function mode is 'offset'
+# The LED will turn on this many seconds after being pressed
 led1_offset_seconds=60
 
 # Used only if function mode is 'set_time'
+# The LED will turn on at the set time at intervals of this many days
+# 1 day would be everyday
 led1_set_time_days=1
 
 # Used only if function mode is 'set_days'
+# Use all lowercase spelling of each word, separated by commas
 led1_set_days=monday,wednesday,friday
 
-# Used by set_time and set_days
-# 24 hour time format
+# Used by set_time, set_days and fixed_interval modes
+# 24 hour time format - 1:00 pm would be 13:00
 led1_set_time=12:00
 
 # Used only if function mode is 'fixed_interval'
+# The light will turn on this many seconds after the set_time and this many seconds after that and so on
 led1_fixed_interval_seconds=360
 
 # Display mode options:
@@ -44,12 +49,12 @@ led1_display_mode=solid
 led1_blink_rate=500
 
 # Used only if display mode is 'fade' (in milliseconds)
+# Every this many milliseconds, the brightness will change by 1%
 led1_fade_rate=10
 
 # Brightness setting (0-100%)
 led1_brightness=100
 
-# Repeat the above block for each LED/Button pair (5 total)
 
 # LED/Button Pair 2 Settings
 led2_function_mode=manual
