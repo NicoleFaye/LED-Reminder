@@ -20,7 +20,7 @@
 
 #define NUM_BUTTONS 5
 
-#define BUTTON_LONG_PRESS_DELAY_MS 1500
+#define BUTTON_LONG_PRESS_DELAY_MS 1000
 
 void initialize_buttons(void);
 bool get_button_state(int pin);
