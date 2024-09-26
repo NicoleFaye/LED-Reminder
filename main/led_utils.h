@@ -40,6 +40,7 @@ typedef struct {
     int set_time_days;
     int set_time_hours;
     int set_time_minutes;
+    int set_time_duration;
     int fixed_interval_seconds;
     char display_mode[10];
     int blink_rate;
@@ -53,7 +54,8 @@ typedef struct {
     int pin;
     ledc_channel_t pwm_channel;
     TickType_t last_update;
-    time_t last_on_time;  
+    time_t last_on_time;
+    time_t scheduled_off_time;
 } LEDSettings;
 
 // Global array of LED settings

@@ -35,6 +35,11 @@ led1_set_days=monday,wednesday,friday
 # 24 hour time format - 1:00 pm would be 13:00
 led1_set_time=12:00
 
+# Used by set_time
+# Duration (in seconds) the LED will remain on after activation from set_time
+# A duration of 0 will mean the light will remain on until turned off manually
+led1_set_time_duration=0
+
 # Used only if function mode is 'fixed_interval'
 # The light will turn on this many seconds after the set_time and this many seconds after that and so on
 led1_fixed_interval_seconds=360
@@ -62,6 +67,7 @@ led2_offset_seconds=60
 led2_set_time_days=1
 led2_set_days=monday,wednesday,friday
 led2_set_time=12:00
+led2_set_time_duration=0
 led2_fixed_interval_seconds=360
 led2_display_mode=solid
 led2_blink_rate=500
@@ -74,6 +80,7 @@ led3_offset_seconds=60
 led3_set_time_days=1
 led3_set_days=monday,wednesday,friday
 led3_set_time=12:00
+led3_set_time_duration=0
 led3_fixed_interval_seconds=360
 led3_display_mode=solid
 led3_blink_rate=500
@@ -86,6 +93,7 @@ led4_offset_seconds=60
 led4_set_time_days=1
 led4_set_days=monday,wednesday,friday
 led4_set_time=12:00
+led4_set_time_duration=0
 led4_fixed_interval_seconds=360
 led4_display_mode=solid
 led4_blink_rate=500
@@ -98,6 +106,7 @@ led5_offset_seconds=60
 led5_set_time_days=1
 led5_set_days=monday,wednesday,friday
 led5_set_time=12:00
+led5_set_time_duration=0
 led5_fixed_interval_seconds=360
 led5_display_mode=solid
 led5_blink_rate=500

@@ -92,6 +92,13 @@ int validate_led_setting(KeyValuePair kv, int led_num)
             return 0; // Invalid time format
         }
     }
+    else if (strstr(kv.key, "set_time_duration") != NULL){
+        //validate that the duration is a positive integer
+        int duration = atoi(kv.value);
+        if (duration < 0){
+            return 0; // Invalid duration
+        }
+    }
     else
     {
         // Other LED settings can be validated as needed

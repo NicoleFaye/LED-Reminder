@@ -72,11 +72,11 @@ void led_fixed_interval_task(void *pvParameters)
             {
                 // Calculate seconds since midnight
                 int seconds_since_midnight = timeinfo.tm_hour * 3600 + timeinfo.tm_min * 60 + timeinfo.tm_sec;
-                
+
                 // Calculate seconds since reference time
                 int ref_seconds = led->set_time_hours * 3600 + led->set_time_minutes * 60;
                 int seconds_since_ref = (seconds_since_midnight - ref_seconds + 86400) % 86400;
-                
+
                 // Check if it's time to activate the LED
                 if (seconds_since_ref % led->fixed_interval_seconds == 0)
                 {
@@ -138,7 +138,6 @@ void led_set_time_task(void *pvParameters)
         for (int i = 0; i < NUM_LEDS; i++)
         {
             LEDSettings *led = &led_settings[i];
-
             if (strcmp(led->function_mode, "set_time") == 0)
             {
                 // Check if it's time to turn on the LED
@@ -152,7 +151,22 @@ void led_set_time_task(void *pvParameters)
                         set_led_state(i, true);
                         led->last_on_time = now;
                         ESP_LOGI(TAG, "LED %d turned on at set time", i + 1);
+
+                        // If set_time_duration is greater than 0, schedule turn off
+                        if (led->set_time_duration > 0)
+                        {
+                            led->scheduled_off_time = now + led->set_time_duration;
+                            ESP_LOGI(TAG, "LED %d scheduled to turn off in %d seconds", i + 1, led->set_time_duration);
+                        }
                     }
+                }
+
+                // Check if it's time to turn off the LED (only if set_time_duration > 0)
+                if (led->set_time_duration > 0 && led->scheduled_off_time > 0 && now >= led->scheduled_off_time)
+                {
+                    set_led_state(i, false);
+                    led->scheduled_off_time = 0; // Reset the scheduled off time
+                    ESP_LOGI(TAG, "LED %d turned off after set duration", i + 1);
                 }
             }
         }
@@ -183,6 +197,8 @@ void initialize_led(void)
         led_settings[i].blink_sequence = (BlinkSequence){0, 0, false};
         led_settings[i].last_update = 0;
         led_settings[i].last_on_time = 0;
+        led_settings[i].set_time_duration = 0;
+        led_settings[i].scheduled_off_time = 0;
         for (int j = 0; j < 7; j++)
         {
             led_settings[i].set_days[j] = false;

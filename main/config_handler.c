@@ -146,6 +146,15 @@ static void apply_led_config(const KeyValuePair *config, int count)
             set_led_brightness(led_index, brightness);
             ESP_LOGI(TAG, "Setting LED %d brightness to %d", led_num, brightness);
         }
+        else if (strcmp(setting, "set_time_duration") == 0)
+        {
+            led_settings[led_index].set_time_duration = atoi(config[i].value);
+            ESP_LOGI(TAG, "Setting LED %d set time duration to %d", led_num, led_settings[led_index].set_time_duration);
+        }
+        else
+        {
+            ESP_LOGW(TAG, "Unknown setting for LED %d: %s = %s", led_num, config[i].key, config[i].value);
+        }
     }
 }
 
