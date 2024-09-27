@@ -5,13 +5,12 @@
 2. [Features](#features)
 3. [Hardware Requirements](#hardware-requirements)
 4. [Software Dependencies](#software-dependencies)
-5. [Installation](#installation)
-6. [Configuration](#configuration)
-7. [Usage](#usage)
-8. [LED Modes](#led-modes)
-9. [Troubleshooting](#troubleshooting)
-10. [Contributing](#contributing)
-11. [License](#license)
+5. [Configuration](#configuration)
+6. [Usage](#usage)
+7. [LED Modes](#led-modes)
+8. [Troubleshooting](#troubleshooting)
+9. [Contributing](#contributing)
+10. [License](#license)
 
 ## Introduction
 The LED Reminder is a, ESP32-S3-based device designed to serve as a versatile and user-friendly reminder system. It features five buttons and five corresponding LEDs, each of which can be independently configured and controlled. The device is highly customizable, allowing users to set up reminders, timers, and visual cues for various purposes.
