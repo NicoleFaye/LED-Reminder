@@ -14,7 +14,7 @@
 11. [License](#license)
 
 ## Introduction
-The LED Reminder is an innovative, ESP32-S3-based device designed to serve as a versatile and user-friendly reminder system. It features five buttons and five corresponding LEDs, each of which can be independently configured and controlled. The device is highly customizable, allowing users to set up reminders, timers, and visual cues for various purposes.
+The LED Reminder is a, ESP32-S3-based device designed to serve as a versatile and user-friendly reminder system. It features five buttons and five corresponding LEDs, each of which can be independently configured and controlled. The device is highly customizable, allowing users to set up reminders, timers, and visual cues for various purposes.
 
 ## Features
 - 5 independently controllable LEDs with corresponding buttons
@@ -60,11 +60,12 @@ For each LED (1-5), the following can be configured:
 - `ledX_fixed_interval_seconds`: (for fixed_interval mode)
 
 ## Usage
-1. Power on the device
-2. Connect to the device via USB to access the configuration file
-3. Edit the `settings.txt` file as needed
-4. Safely eject the device and restart it to apply changes
-5. (Optional) Delete the `settings.txt` file to reset to defaults on next boot
+1. Connect to the device via USB to a computer to access the configuration file
+2. Edit the `settings.txt` file as needed
+3. Safely eject the device and restart it to apply changes
+
+- You can delete the `settings.txt` file to reset to defaults on next boot
+- Upon connecting to wifi, all 5 LEDs will blink 3 times to indicate successful connection
 
 ## LED Modes
 
@@ -76,10 +77,10 @@ For each LED (1-5), the following can be configured:
 LED turns on at specified times with configurable frequency and duration
 
 ### Offset Mode
-LED turns on automatically after a set time from being turned off
+LED turns on automatically after a set time from being turned off by pressing the button
 
 ### Fixed Interval Mode
-LED turns on at fixed intervals from device startup
+LED turns on at fixed intervals from device startup, independent of when the button was pressed
 
 ## Display Modes
 
@@ -93,10 +94,23 @@ LED alternates between on and off states
 LED gradually transitions between on and off states
 
 ## Troubleshooting
-(List common issues and their solutions)
+- The device may not boot if the `settings.txt` file is invalid or corrupted
+- If the device fails to connect to WiFi, ensure the SSID matches exactly and the password is correct
+- If you come across any other issues, please create and issue on [Github](https://github.com/NicoleFaye/LED-Reminder/issues)
 
 ## Contributing
-(Provide guidelines for contributing to the project)
+If you have any suggestions or improvements, please feel free to create a pull request or an issue with your ideas.
 
 ## License
-(Specify the project's license)
+This project is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).
+
+You are free to:
+- Share — copy and redistribute the material in any medium or format
+- Adapt — remix, transform, and build upon the material
+
+Under the following terms:
+- Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
+- NonCommercial — You may not use the material for commercial purposes.
+- ShareAlike — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
+
+For more details, see the [full license text](https://github.com/NicoleFaye/LED-Reminder/blob/main/LICENSE).
