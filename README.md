@@ -1,4 +1,4 @@
-# LED Reminder Project
+# LED Reminder
 
 ## Table of Contents
 1. [Introduction](#introduction)
