@@ -35,9 +35,6 @@ or
 ## Software Dependencies
 - ESP-IDF v4.4 or later
 
-## Installation
-(Provide step-by-step installation instructions)
-
 ## Configuration
 The device is configured using a `settings.txt` file. Key settings include:
 
@@ -97,6 +94,7 @@ LED gradually transitions between on and off states
 - The device may not boot if the `settings.txt` file is invalid or corrupted
 - If the device fails to connect to WiFi, ensure the SSID matches exactly and the password is correct
 - If you come across any other issues, please create and issue on [Github](https://github.com/NicoleFaye/LED-Reminder/issues)
+- If you are trying to create your own device, create an issue with any problems you encounter and I will try to help
 
 ## Contributing
 If you have any suggestions or improvements, please feel free to create a pull request or an issue with your ideas.
