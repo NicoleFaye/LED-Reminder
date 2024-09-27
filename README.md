@@ -14,7 +14,7 @@
 11. [License](#license)
 
 ## Introduction
-The LED Reminder is an ESP32-S3 based device featuring 5 buttons and 5 LEDs. It offers versatile LED control modes and easy configuration through a text file.
+The LED Reminder is an innovative, ESP32-S3-based device designed to serve as a versatile and user-friendly reminder system. It features five buttons and five corresponding LEDs, each of which can be independently configured and controlled. The device is highly customizable, allowing users to set up reminders, timers, and visual cues for various purposes.
 
 ## Features
 - 5 independently controllable LEDs with corresponding buttons
@@ -22,8 +22,7 @@ The LED Reminder is an ESP32-S3 based device featuring 5 buttons and 5 LEDs. It 
 - Various LED display modes: Solid, Blink, Fade
 - Adjustable brightness for each LED
 - Easy configuration via text file
-- USB Mass Storage support for easy settings file access
-- Real-time clock synchronization via NTP
+- Real-time clock synchronization via NTP over WiFi
 
 ## Hardware Requirements
 - LED Reminder device 
@@ -65,6 +64,7 @@ For each LED (1-5), the following can be configured:
 2. Connect to the device via USB to access the configuration file
 3. Edit the `settings.txt` file as needed
 4. Safely eject the device and restart it to apply changes
+5. (Optional) Delete the `settings.txt` file to reset to defaults on next boot
 
 ## LED Modes
 
@@ -72,11 +72,11 @@ For each LED (1-5), the following can be configured:
 - Short press: Toggle LED on/off
 - Long press: Toggle LED on
 
-### Offset Mode
-LED turns on automatically after a set time from being turned off
-
 ### Set Time Mode
 LED turns on at specified times with configurable frequency and duration
+
+### Offset Mode
+LED turns on automatically after a set time from being turned off
 
 ### Fixed Interval Mode
 LED turns on at fixed intervals from device startup
