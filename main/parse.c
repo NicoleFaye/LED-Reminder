@@ -50,15 +50,25 @@ int validate_led_setting(KeyValuePair kv, int led_num)
         return 1; // Not for this LED
     }
 
-    if (strstr(kv.key, "function_mode") != NULL)
+    // Extract the setting name after the LED number
+    const char *setting = strchr(kv.key, '_');
+    if (setting == NULL)
+    {
+        return 1; // Skip if there's no underscore in the key
+    }
+    setting++; // Move past the underscore
+
+    // Use exact matches instead of substring matches
+    if (strcmp(setting, "function_mode") == 0)
     {
         if (strcmp(kv.value, "manual") != 0 && strcmp(kv.value, "offset") != 0 &&
-            strcmp(kv.value, "set_time") != 0 && strcmp(kv.value, "fixed_interval") != 0 && strcmp(kv.value, "set_days") != 0)
+            strcmp(kv.value, "set_time") != 0 && strcmp(kv.value, "fixed_interval") != 0 &&
+            strcmp(kv.value, "set_days") != 0)
         {
             return 0; // Invalid function mode
         }
     }
-    else if (strstr(kv.key, "display_mode") != NULL)
+    else if (strcmp(setting, "display_mode") == 0)
     {
         if (strcmp(kv.value, "solid") != 0 && strcmp(kv.value, "blink") != 0 &&
             strcmp(kv.value, "fade") != 0)
@@ -66,7 +76,7 @@ int validate_led_setting(KeyValuePair kv, int led_num)
             return 0; // Invalid display mode
         }
     }
-    else if (strstr(kv.key, "brightness") != NULL)
+    else if (strcmp(setting, "brightness") == 0)
     {
         int brightness = atoi(kv.value);
         if (brightness < 0 || brightness > 100)
@@ -74,7 +84,7 @@ int validate_led_setting(KeyValuePair kv, int led_num)
             return 0; // Invalid brightness
         }
     }
-    else if (strstr(kv.key, "set_time_days") != NULL)
+    else if (strcmp(setting, "set_time_days") == 0)
     {
         int days = atoi(kv.value);
         if (days < 0 || days > 365 * 10)
@@ -82,7 +92,7 @@ int validate_led_setting(KeyValuePair kv, int led_num)
             return 0; // Invalid days
         }
     }
-    else if (strstr(kv.key, "set_time") != NULL)
+    else if (strcmp(setting, "set_time") == 0) // Exact match for set_time
     {
         // Validate the time format (HH:MM)
         int hours, minutes;
@@ -92,19 +102,17 @@ int validate_led_setting(KeyValuePair kv, int led_num)
             return 0; // Invalid time format
         }
     }
-    else if (strstr(kv.key, "set_time_duration") != NULL){
-        //validate that the duration is a positive integer
+    else if (strcmp(setting, "set_time_duration") == 0) // Exact match for set_time_duration
+    {
+        // Validate that the duration is zero or positive
         int duration = atoi(kv.value);
-        if (duration < 0){
+        if (duration < 0)
+        {
             return 0; // Invalid duration
         }
     }
-    else
-    {
-        // Other LED settings can be validated as needed
-    }
 
-    return 1;
+    return 1; // Valid setting
 }
 
 int check_configuration(const char *filename)
@@ -262,4 +270,3 @@ KeyValuePair *parse_configuration(const char *filename, int *length)
     ESP_LOGI(TAG, "Parsed %d key-value pairs from configuration file", kv_count);
     return kv_array;
 }
-

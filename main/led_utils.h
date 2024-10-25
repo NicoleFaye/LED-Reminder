@@ -12,7 +12,9 @@
 #include <time.h>
 #include <string.h>
 #include "driver/ledc.h"
+#include "gpio_config.h"
 
+// LED GPIO definitions
 #define LED1 1
 #define LED2 2
 #define LED3 4
@@ -22,18 +24,21 @@
 #define NUM_LEDS 5
 #define WIFI_CONNECTED_BLINK_DELAY_MS 500
 
-#define PWM_FREQUENCY 5000 // 5 kHz
+// PWM configurations
+#define PWM_FREQUENCY 5000              // 5 kHz
 #define PWM_RESOLUTION LEDC_TIMER_8_BIT // 8-bit resolution, 256 levels
 
 // Blink sequence structure
-typedef struct {
+typedef struct
+{
     int delay_ms;
     int num_blinks;
     bool active;
 } BlinkSequence;
 
 // LED Settings structure
-typedef struct {
+typedef struct
+{
     char function_mode[20];
     int offset_seconds;
     bool set_days[7];
@@ -61,13 +66,18 @@ typedef struct {
 // Global array of LED settings
 extern LEDSettings led_settings[NUM_LEDS];
 
+// Function declarations
 void initialize_led(void);
 void set_led_state(int led_index, bool state);
 void set_led_brightness(int led_index, int brightness);
 void led_task(void *pvParameters);
 void blink(int delay_ms, int num_blinks, int led_index);
 void blinkSet(int delay_ms, int num_blinks, int led_indices[], int num_leds);
-void led_set_time_task(void *pvParameters); 
+void led_set_time_task(void *pvParameters);
 void led_set_days_task(void *pvParameters);
+void led_offset_task(void *pvParameters);
+void led_fixed_interval_task(void *pvParameters);
+void initialize_ledc(void);
+void update_led_duty(int led_index, int brightness);
 
 #endif
