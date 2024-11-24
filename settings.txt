@@ -1,6 +1,6 @@
 # Configuration File for LED/Button Settings
 
-# Timezone setting (e.g., "America/New_York", "UTC")
+# Timezone setting (Full list of options at end of file)
 timezone=America/Los_Angeles
 
 # Wi-Fi network SSID (Network name)
