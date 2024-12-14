@@ -8,5 +8,5 @@ idf_component_register(
     SRCS "gpio_config.c" "led_utils.c" "config_handler.c" "tusb_msc_main.c" "parse.c" "settings.c" "wifi_utils.c" "time_utils.c" "msc_utils.c" "repl.c" "buttons.c" "config_handler.c"
     INCLUDE_DIRS .
     PRIV_REQUIRES "${priv_requires}"
-    REQUIRES esp_wifi nvs_flash 
+    REQUIRES esp_wifi nvs_flash esp_driver_ledc esp_driver_gpio
 )
