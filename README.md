@@ -52,6 +52,7 @@ For each LED (1-5), the following can be configured:
 - `ledX_offset_seconds`: (for offset mode)
 - `ledX_set_time`: HH:MM (for set_time mode)
 - `ledX_set_time_days`: Interval in days (for set_time mode)
+- `led4_set_days`: Days of the week (for set_days mode)
 - `ledX_set_time_duration`: Duration in seconds (for set_time mode)
 - `ledX_fixed_interval_seconds`: (for fixed_interval mode)
 
@@ -71,6 +72,9 @@ For each LED (1-5), the following can be configured:
 
 ### Set Time Mode
 LED turns on at specified times with configurable frequency and duration
+
+### Set Days Mode
+LED turns on at specified times on specific days of the week
 
 ### Offset Mode
 LED turns on automatically after a set time from being turned off by pressing the button
