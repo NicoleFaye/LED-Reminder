@@ -32,7 +32,7 @@ or
 - Resistors and wiring as needed
 
 ## Software Dependencies
-- ESP-IDF v4.4 or later
+- ESP-IDF v5.2.3
 
 ## Configuration
 The device is configured using a `settings.txt` file. Key settings include:
